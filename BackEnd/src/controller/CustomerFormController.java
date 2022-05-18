@@ -14,9 +14,10 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "/customer")
 
-public class CustomerServlet extends HttpServlet {
+public class CustomerFormController extends HttpServlet {
+    @Resource(name = "java:comp/env/jdbc/pool")
+
     CustomerBO customerBO = (CustomerBO) BOFactory.getBOFactory().getBO(BOFactory.BOTypes.CUSTOMER);
 
     @Override
@@ -24,6 +25,7 @@ public class CustomerServlet extends HttpServlet {
 
         try {
             resp.setContentType("application/json");
+
             resp.getWriter().print(customerBO.getAllCustomers());
 
 
