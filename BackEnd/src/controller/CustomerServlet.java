@@ -17,9 +17,6 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = "/customer")
 
 public class CustomerServlet extends HttpServlet {
-    @Resource(name = "java:comp/env/jdbc/pool")
-    DataSource ds;
-
     CustomerBO customerBO = (CustomerBO) BOFactory.getBOFactory().getBO(BOFactory.BOTypes.CUSTOMER);
 
     @Override
@@ -27,18 +24,7 @@ public class CustomerServlet extends HttpServlet {
 
         try {
             resp.setContentType("application/json");
-            String option = req.getParameter("option");
-
-
-            switch (option) {
-                case "SEARCH":
-                    //write the code for customer search
-
-                    break;
-                case "GETALL":
-                    resp.getWriter().print(customerBO.getAllCustomers());
-                    break;
-            }
+            resp.getWriter().print(customerBO.getAllCustomers());
 
 
         } catch (SQLException throwables) {

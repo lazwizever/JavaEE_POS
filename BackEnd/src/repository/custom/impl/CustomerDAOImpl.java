@@ -16,19 +16,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CustomerDAOImpl implements CustomerDAO{
-    @Resource(name = "java:comp/env/jdbc/pool")
-    DataSource ds;
+   /* @Resource(name = "java:comp/env/jdbc/pool")
+    DataSource ds = null;*/
 
     @Override
     public JsonArray getAll() throws SQLException, ClassNotFoundException{
 
         /*String option = req.getParameter("option");
         resp.setContentType("application/json");*/
-        Connection connection = ds.getConnection();
+        ResultSet rst = CrudUtil.executeQuery("select * from Customer");
         /*PrintWriter writer = resp.getWriter();*/
-
-
-                ResultSet rst = connection.prepareStatement("select * from Customer").executeQuery();
 
                 JsonArrayBuilder customerArrayBuilder = Json.createArrayBuilder(); // json array
                 JsonObjectBuilder objectBuilder = Json.createObjectBuilder();

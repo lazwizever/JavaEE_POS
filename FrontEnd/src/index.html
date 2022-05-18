@@ -714,7 +714,7 @@
     function loadAllCustomers() {
         $("#customerTable").empty();
         $.ajax({
-            url: "http://localhost:8080/backend/customer?option=GETALL",
+            url: "http://localhost:8080/backend/customer",
             method: "GET",
             // dataType:"json", // please convert the response into JSON
             success: function (resp) {

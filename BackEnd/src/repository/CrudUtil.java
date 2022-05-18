@@ -9,13 +9,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CrudUtil extends HttpServlet {
+public class CrudUtil{
 
     @Resource(name = "java:comp/env/jdbc/pool")
 
 
     private static PreparedStatement getPreparedStatement(String sql, Object... args) throws SQLException, ClassNotFoundException {
-        DataSource ds1 =null;
+        DataSource ds1 = null;
         PreparedStatement pst = ds1.getConnection().prepareStatement(sql);
 
         for (int i = 0; i < args.length; i++) {
@@ -26,7 +26,6 @@ public class CrudUtil extends HttpServlet {
     }
 
     public static boolean executeUpdate(String sql, Object... args) throws SQLException, ClassNotFoundException {
-        System.out.println("hii");
         PreparedStatement pst = getPreparedStatement(sql, args);
         return pst.executeUpdate() > 0;
     }
