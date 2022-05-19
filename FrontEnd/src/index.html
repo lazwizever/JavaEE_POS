@@ -361,7 +361,7 @@
 
                     <div class="col-12 d-grid gap-2 d-md-flex justify-content-md-end">
                         <button type="button" id="btnClearCustomerFields" style="background-color:#273c75; color: white" class="btn" >Clear</button>
-                        <button type="button" id="btnCustomerRegister" class="btn btn-secondary" disabled >Register</button>
+                        <button type="button" id="btnCustomerRegister" class="btn btn-secondary" >Register</button>
                         <button type="button" style="background-color:#4cd137; color:white" id="btnUpdateCustomer" class="btn">Update</button>
                         <button type="button" id="btnCustomerDelete" class="btn btn-danger">Delete </button>
                     </div>
@@ -717,7 +717,7 @@
             success: function (res) {
                 if (res.status == 200) {
                     alert(res.message);
-                    loadAllCustomers();
+                    /*loadAllCustomers();*/
                 } else {
                     alert(res.data);
                 }
@@ -735,11 +735,11 @@
 
 
 
-    loadAllCustomers();
+   /* loadAllCustomers();*/
 
     /*-----Load All Customers---------*/
 
-    function loadAllCustomers() {
+ /*   function loadAllCustomers() {
         $("#customerTable").empty();
         $.ajax({
             url: "http://localhost:8080/backend/customer",
@@ -756,7 +756,7 @@
             }
         });
 
-    }
+    }*/
 
 </script>
 

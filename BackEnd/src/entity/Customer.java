@@ -6,13 +6,12 @@ public class Customer {
     private String address;
     private String city;
     private String province;
-    private String postalCode;
+    private int postalCode;
 
     public Customer() {
     }
 
-
-    public Customer(String id, String name, String address, String city, String province, String postalCode) {
+    public Customer(String id, String name, String address, String city, String province, int postalCode) {
         this.setId(id);
         this.setName(name);
         this.setAddress(address);
@@ -20,7 +19,6 @@ public class Customer {
         this.setProvince(province);
         this.setPostalCode(postalCode);
     }
-
 
     public String getId() {
         return id;
@@ -62,11 +60,11 @@ public class Customer {
         this.province = province;
     }
 
-    public String getPostalCode() {
+    public int getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(String postalCode) {
+    public void setPostalCode(int postalCode) {
         this.postalCode = postalCode;
     }
 }

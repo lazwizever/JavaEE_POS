@@ -1,6 +1,6 @@
 package repository;
 
-import repository.custom.impl.CustomerServletDAOImpl;
+import repository.custom.impl.CustomerDAOImpl;
 
 public class DAOFactory {
 
@@ -22,7 +22,7 @@ public class DAOFactory {
                 case ORDER:
                     return new PlaceOrderDAOImpl();*/
                 case CUSTOMER:
-                    return new CustomerServletDAOImpl();
+                    return new CustomerDAOImpl();
                 default:
                     return null;
             }
