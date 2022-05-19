@@ -62,6 +62,6 @@ public class CustomerBOImpl implements CustomerBO{
 
     @Override
     public Customer searchCustomer(String cId, Connection connection) {
-        return null;
+        
     }
 }

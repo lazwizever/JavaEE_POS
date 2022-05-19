@@ -76,9 +76,15 @@ public class CustomerServlet extends HttpServlet {
                         arrayBuilder.add(ob.build());
                     }
 
-                    writer.print(arrayBuilder.build());
+                    JsonObjectBuilder response = Json.createObjectBuilder();
+                    response.add("status", 200);
+                    response.add("message", "Done");
+                    response.add("data", arrayBuilder.build());
+                    writer.print(response.build());
+
                     break;
             }
+
             connection.close();
 
         } catch (SQLException | ClassNotFoundException throwables) {

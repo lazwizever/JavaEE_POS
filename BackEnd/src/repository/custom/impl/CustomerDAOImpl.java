@@ -27,49 +27,6 @@ import java.sql.SQLException;
 
 public class CustomerDAOImpl implements CustomerDAO {
 
-   /* @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        PrintWriter writer = resp.getWriter();
-        resp.setContentType("application/json");
-        try {
-            Connection connection = ds.getConnection();
-            PreparedStatement pstm = connection.prepareStatement("Insert into Customer values(?,?,?,?,?,?)");
-            pstm.setObject(1, req.getParameter("customerID"));
-            pstm.setObject(2, req.getParameter("customerName"));
-            pstm.setObject(3,  req.getParameter("customerAddress"));
-            pstm.setObject(4, req.getParameter("city"));
-            pstm.setObject(5, req.getParameter("province"));
-            pstm.setObject(6, req.getParameter("postalCode"));
-
-            if (pstm.executeUpdate() > 0) {
-
-                JsonObjectBuilder response = Json.createObjectBuilder();
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-                response.add("status", 200);
-                response.add("message", "Successfully Added");
-                response.add("data", "");
-                writer.print(response.build());
-            }
-
-            connection.close();
-
-        } catch (SQLException throwables) {
-            JsonObjectBuilder response = Json.createObjectBuilder();
-            response.add("status", 400);
-            response.add("message", "Error");
-            response.add("data", throwables.getLocalizedMessage());
-            writer.print(response.build());
-            resp.setStatus(HttpServletResponse.SC_OK);
-            throwables.printStackTrace();
-        }
-    }*/
-
     @Override
     public ObservableList<Customer> getAll(Connection connection) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.executeQuery(connection, "SELECT * FROM Customer");

@@ -710,6 +710,7 @@
 
     $("#btnCustomerRegister").click(function () {
         var data = $("#customerForm").serialize();
+        console.log(data);
         $.ajax({
             url: "http://localhost:8080/backend/customer",
             method: "POST",
@@ -732,6 +733,8 @@
 
 
     loadAllCustomers();
+
+
 
 
     /*-----Load All Customers---------*/
