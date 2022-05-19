@@ -131,4 +131,98 @@ public class CustomerServlet extends HttpServlet {
 
     }
 
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        PrintWriter writer = resp.getWriter();
+
+       /* JsonReader reader = Json.createReader(req.getReader());
+        JsonObject jsonObject = reader.readObject();*/
+
+        try {
+            Connection connection = ds.getConnection();
+
+            CustomerDTO customerDTO = new CustomerDTO(
+                    req.getParameter("id"),
+                    req.getParameter("name"),
+                    req.getParameter("address"),
+                    req.getParameter("city"),
+                    req.getParameter("province"),
+                    Integer.parseInt(req.getParameter("postalCode"))
+            );
+
+            if (customerBO.updateCustomer(customerDTO,connection)) {
+                resp.setStatus(HttpServletResponse.SC_OK);
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("message","Customer Successfully Updated.");
+                objectBuilder.add("status",resp.getStatus());
+                writer.print(objectBuilder.build());
+
+            }else{
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("message","Update Failed.");
+                objectBuilder.add("status",400);
+                writer.print(objectBuilder.build());
+
+            }
+            connection.close();
+
+        } catch (SQLException | ClassNotFoundException e) {
+
+            resp.setStatus(HttpServletResponse.SC_OK);
+
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+            objectBuilder.add("data",e.getLocalizedMessage());
+            objectBuilder.add("message","Update Failed.");
+            objectBuilder.add("status",resp.getStatus());
+            writer.print(objectBuilder.build());
+
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/jason");
+        String cId = req.getParameter("CusID");
+
+        PrintWriter writer = resp.getWriter();
+
+        try {
+
+            Connection connection = ds.getConnection();
+
+            if (customerBO.deleteCustomer(cId,connection)) {
+
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                resp.setStatus(HttpServletResponse.SC_OK);
+                objectBuilder.add("message","Customer Successfully Deleted.");
+                objectBuilder.add("status",resp.getStatus());
+                writer.print(objectBuilder.build());
+
+            }else {
+
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("message","Wrong Id Inserted.");
+                objectBuilder.add("status",400);
+                writer.print(objectBuilder.build());
+
+            }
+            connection.close();
+
+        } catch (SQLException | ClassNotFoundException e) {
+
+            resp.setStatus(HttpServletResponse.SC_OK);
+
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+            objectBuilder.add("data",e.getLocalizedMessage());
+            objectBuilder.add("message","Error");
+            objectBuilder.add("status",resp.getStatus());
+            writer.print(objectBuilder.build());
+
+            e.printStackTrace();
+        }
+    }
 }

@@ -707,7 +707,7 @@
     });
 
 
-
+/*----------SAve Customer--------*/
     $("#btnCustomerRegister").click(function () {
         var data = $("#customerForm").serialize();
         console.log(data);
@@ -744,8 +744,9 @@
             method: "GET",
             success: function (resp) {
                 for (const customer of resp.data) {
-                    let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.city}</td><td>${customer.province}</td><td>${customer.postalCode}</td></tr>`;
+                    let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.city}</td><td>${customer.postalCode}</td></tr>`;
                     $("#customerTable").append(row);
+                    bindClickEvents();
                 }
             },
             error:function (ob,state,error){
@@ -755,7 +756,7 @@
 
     }
 
-
+/*------------Search Customer-----------*/
     $("#btnSearchCustomer").click(function () {
         let cusId = $("#txtSearchCustomer").val();
 
@@ -773,6 +774,96 @@
             error: function (ob, statusText, error) {
                 alert("No Such Customer");
                 loadAllCustomers();
+            }
+        });
+    });
+
+
+/*---------------Bind customer details to text fields-----*/
+
+    function bindClickEvents() {
+        $("#customerTable>tr").click(function () {
+
+            let id = $(this).children().eq(0).text();
+            let name = $(this).children().eq(1).text();
+            let address = $(this).children().eq(2).text();
+            let city = $(this).children().eq(3).text();
+            let postalCode = $(this).children().eq(4).text();
+
+
+            $("#inputnewId").val(id);
+            $("#custName").val(name);
+            $("#custAddress").val(address);
+            $("#inputCity").val(city);
+            $("#province").val(province);
+            $("#postalCode").val(postalCode);
+        });
+    }
+
+
+    /*--------Update Customer-------------*/
+
+    $("#btnUpdateCustomer").click(function () {
+
+        var customerOb = {
+            id: $("#inputnewId").val(),
+            name: $("#custName").val(),
+            address: $("#custAddress").val(),
+            city: $("#inputCity").val(),
+            province: $("#province").val(),
+            postalCode: $("#postalCode").val()
+        }
+
+        $.ajax({
+            url: "http://localhost:8080/backend/customer",
+            method: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify(customerOb),
+            success: function (res) {
+                if (res.status == 200) {
+                    alert(res.message);
+                    loadAllCustomers();
+                } else if (res.status == 400) {
+                    alert(res.message);
+                } else {
+                    alert(res.data);
+                }
+            },
+            error: function (ob, errorStus) {
+                console.log(ob);
+            }
+        });
+    });
+
+
+
+    /*----------------Delete Customer-------------*/
+
+    $("#btnCustomerDelete").click(function () {
+        let cusId = $("#inputnewId").val();
+        console.log(cusId);
+        $.ajax({
+            url: "http://localhost:8080/backend/customer?CusID=" + cusId,
+            method: "DELETE",
+
+            success: function (res) {
+                console.log(res);
+                if (res.status == 200) {
+                    alert("Customer Successfully Deleted.");
+                    loadAllCustomers();
+                } else if (res.status == 400) {
+                    alert("Customer Successfully Deleted.");
+                    loadAllCustomers();
+                } else {
+                    alert("Customer Successfully Deleted.");
+                    loadAllCustomers();
+                }
+
+            },
+            error: function (ob, status, t) {
+                console.log(ob);
+                console.log(status);
+                console.log(t);
             }
         });
     });
