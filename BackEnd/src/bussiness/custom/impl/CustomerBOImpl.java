@@ -4,13 +4,10 @@ import bussiness.custom.CustomerBO;
 import dto.CustomerDTO;
 import entity.Customer;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import repository.DAOFactory;
 import repository.custom.CustomerDAO;
 
-import javax.json.*;
-import javax.servlet.http.HttpServlet;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -35,9 +32,21 @@ public class CustomerBOImpl implements CustomerBO{
         return (JsonArray) obList;
     }*/
 
+
     @Override
-    public JsonArray getAllCustomers() throws SQLException, ClassNotFoundException {
-        return null;
+    public ObservableList<CustomerDTO> getAllCustomers(Connection connection) throws SQLException, ClassNotFoundException {
+        ObservableList<Customer> customers = customerDAO.getAll(connection);
+
+        ObservableList<CustomerDTO> obCusList = FXCollections.observableArrayList();
+
+        for (Customer temp : customers) {
+            CustomerDTO customerDTO = new CustomerDTO(
+                    temp.getId(),temp.getName(),temp.getAddress(),temp.getCity(),temp.getProvince(),temp.getPostalCode()
+            );
+
+            obCusList.add(customerDTO);
+        }
+        return obCusList;
     }
 
     @Override
@@ -49,5 +58,10 @@ public class CustomerBOImpl implements CustomerBO{
 
         );
        return customerDAO.add(customer,connection);
+    }
+
+    @Override
+    public Customer searchCustomer(String cId, Connection connection) {
+        return null;
     }
 }

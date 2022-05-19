@@ -1,6 +1,8 @@
 package repository.custom.impl;
 
 import entity.Customer;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import repository.CrudUtil;
 import repository.custom.CustomerDAO;
 
@@ -24,9 +26,6 @@ import java.sql.SQLException;
 
 
 public class CustomerDAOImpl implements CustomerDAO {
-
-    @Resource(name = "java:comp/env/jdbc/pool")
-    DataSource ds;
 
    /* @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -72,8 +71,27 @@ public class CustomerDAOImpl implements CustomerDAO {
     }*/
 
     @Override
-    public JsonArray getAll() throws SQLException, ClassNotFoundException {
-        return null;
+    public ObservableList<Customer> getAll(Connection connection) throws SQLException, ClassNotFoundException {
+        ResultSet resultSet = CrudUtil.executeQuery(connection, "SELECT * FROM Customer");
+
+        ObservableList<Customer> obList = FXCollections.observableArrayList();
+
+        while (resultSet.next()){
+
+            Customer customer = new Customer(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getString(4),
+                    resultSet.getString(5),
+                    Integer.parseInt(resultSet.getString(6))
+            );
+
+            obList.add(customer);
+        }
+
+        return obList;
+
     }
 
     @Override
@@ -94,4 +112,6 @@ public class CustomerDAOImpl implements CustomerDAO {
     public boolean delete(String s) throws SQLException, ClassNotFoundException {
         return false;
     }
+
+
 }

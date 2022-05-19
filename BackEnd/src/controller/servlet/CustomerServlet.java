@@ -5,12 +5,10 @@ import bussiness.custom.CustomerBO;
 import bussiness.custom.impl.CustomerBOImpl;
 import dto.CustomerDTO;
 import entity.Customer;
+import javafx.collections.ObservableList;
 
 import javax.annotation.Resource;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
+import javax.json.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,24 +30,65 @@ public class CustomerServlet extends HttpServlet {
 
     CustomerBO customerBO = (CustomerBO) BOFactory.getBOFactory().getBO(BOFactory.BOTypes.CUSTOMER);
 
-    /*@Override
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        resp.setContentType("application/json");
+
+        String cId = req.getParameter("cusId");
+        String option = req.getParameter("option");
+        PrintWriter writer = resp.getWriter();
+
         try {
-            resp.setContentType("application/json");
+            Connection connection = ds.getConnection();
 
-            resp.getWriter().print(customerBO.getAllCustomers());
+            switch (option) {
 
+                case "SEARCH":
+                    Customer customer = customerBO.searchCustomer(cId, connection);
 
-        } catch (SQLException throwables) {
+                    JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+
+                    objectBuilder.add("id", customer.getId());
+                    objectBuilder.add("name", customer.getName());
+                    objectBuilder.add("address", customer.getAddress());
+                    objectBuilder.add("city", customer.getCity());
+                    objectBuilder.add("province", customer.getProvince());
+                    objectBuilder.add("postalCode", customer.getPostalCode());
+
+                    break;
+
+                case "GETALL":
+
+                    ObservableList<CustomerDTO> allCustomers = customerBO.getAllCustomers(connection);
+                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+                    for (CustomerDTO c : allCustomers) {
+                        JsonObjectBuilder ob = Json.createObjectBuilder();
+
+                        ob.add("id", c.getCustomerId());
+                        ob.add("name", c.getCustomerName());
+                        ob.add("address", c.getCustomerAddress());
+                        ob.add("city", c.getCity());
+                        ob.add("province", c.getProvince());
+                        ob.add("postalCode", c.getPostalCode());
+
+                        arrayBuilder.add(ob.build());
+                    }
+
+                    writer.print(arrayBuilder.build());
+                    break;
+            }
+            connection.close();
+
+        } catch (SQLException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+
         }
 
-    }*/
+    }
 
-    @Override
+        @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         PrintWriter writer = resp.getWriter();
@@ -84,6 +123,5 @@ public class CustomerServlet extends HttpServlet {
         }
 
     }
-
 
 }
