@@ -1,6 +1,7 @@
 package repository;
 
 import repository.custom.impl.CustomerDAOImpl;
+import repository.custom.impl.ItemDAOImpl;
 
 public class DAOFactory {
 
@@ -17,9 +18,9 @@ public class DAOFactory {
 
         public  SuperDAO  getDAO(DAOTypes types){
             switch (types){
-               /* case ITEM:
+                case ITEM:
                     return new ItemDAOImpl();
-                case ORDER:
+                /*case ORDER:
                     return new PlaceOrderDAOImpl();*/
                 case CUSTOMER:
                     return new CustomerDAOImpl();
@@ -29,7 +30,7 @@ public class DAOFactory {
         }
 
     public  enum  DAOTypes{
-        CUSTOMER
+        CUSTOMER,ITEM
     }
 
 

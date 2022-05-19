@@ -112,7 +112,7 @@ public class CustomerServlet extends HttpServlet {
                     req.getParameter("customerAddress"),
                     req.getParameter("city"),
                     req.getParameter("province"),
-                    Integer.parseInt(req.getParameter("postalCode"))
+                   req.getParameter("postalCode")
 
             );
 
@@ -137,19 +137,28 @@ public class CustomerServlet extends HttpServlet {
         resp.setContentType("application/json");
         PrintWriter writer = resp.getWriter();
 
-       /* JsonReader reader = Json.createReader(req.getReader());
-        JsonObject jsonObject = reader.readObject();*/
+        JsonReader reader = Json.createReader(req.getReader());
+        JsonObject jsonObject = reader.readObject();
 
         try {
             Connection connection = ds.getConnection();
 
+            System.out.println(req.getParameter("postalCode"));
             CustomerDTO customerDTO = new CustomerDTO(
-                    req.getParameter("id"),
+                    /*req.getParameter("id"),
                     req.getParameter("name"),
                     req.getParameter("address"),
                     req.getParameter("city"),
                     req.getParameter("province"),
-                    Integer.parseInt(req.getParameter("postalCode"))
+                   req.getParameter("postalCode")*/
+
+                    jsonObject.getString("id"),
+                    jsonObject.getString("name"),
+                    jsonObject.getString("address"),
+                    jsonObject.getString("city"),
+                    jsonObject.getString("province"),
+                    jsonObject.getString("postalCode")
+
             );
 
             if (customerBO.updateCustomer(customerDTO,connection)) {

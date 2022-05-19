@@ -23,7 +23,7 @@ public class CustomerBOImpl implements CustomerBO{
 
         for (Customer temp : customers) {
             CustomerDTO customerDTO = new CustomerDTO(
-                    temp.getId(),temp.getName(),temp.getAddress(),temp.getCity(),temp.getProvince(),temp.getPostalCode()
+                    temp.getId(),temp.getName(),temp.getAddress(),temp.getCity(),temp.getProvince(),String.valueOf(temp.getPostalCode())
             );
 
             obCusList.add(customerDTO);
@@ -36,7 +36,7 @@ public class CustomerBOImpl implements CustomerBO{
 
         Customer customer = new Customer(
                 customerDTO.getCustomerId(),customerDTO.getCustomerName(),customerDTO.getCustomerAddress(),customerDTO.getCity(),
-                customerDTO.getProvince(),customerDTO.getPostalCode()
+                customerDTO.getProvince(),Integer.parseInt(customerDTO.getPostalCode())
 
         );
        return customerDAO.add(customer,connection);
@@ -48,7 +48,7 @@ public class CustomerBOImpl implements CustomerBO{
 
         CustomerDTO customerDTO = new CustomerDTO(
                 customer.getId(),customer.getName(),customer.getAddress(),customer.getCity(),
-                customer.getProvince(),customer.getPostalCode()
+                customer.getProvince(),String.valueOf(customer.getPostalCode())
         );
         return customerDTO;
 
@@ -56,10 +56,10 @@ public class CustomerBOImpl implements CustomerBO{
 
     @Override
     public boolean updateCustomer(CustomerDTO customerDTO, Connection connection) throws SQLException, ClassNotFoundException {
-
+        System.out.println(customerDTO.getPostalCode());
         Customer customer = new Customer(
                 customerDTO.getCustomerId(),customerDTO.getCustomerName(),customerDTO.getCustomerAddress(),
-                customerDTO.getCity(),customerDTO.getProvince(),customerDTO.getPostalCode()
+                customerDTO.getCity(),customerDTO.getProvince(),Integer.parseInt(customerDTO.getPostalCode())
         );
 
         return customerDAO.update(customer,connection);

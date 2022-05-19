@@ -2,6 +2,7 @@ package bussiness;
 
 
 import bussiness.custom.impl.CustomerBOImpl;
+import bussiness.custom.impl.ItemBOImpl;
 
 public class BOFactory {
 
@@ -22,6 +23,10 @@ public class BOFactory {
             switch (types){
                 case CUSTOMER:
                     return new CustomerBOImpl();
+
+                case ITEM:
+                    return new ItemBOImpl();
+
                 /*case ORDER:
                     return new OrderBOImpl();
                 case PURCHASE_ORDER:
@@ -35,7 +40,7 @@ public class BOFactory {
         }
 
         public enum BOTypes{
-           CUSTOMER
+           CUSTOMER,ITEM
         }
 
 }

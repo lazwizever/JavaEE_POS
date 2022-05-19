@@ -6,12 +6,12 @@ public class CustomerDTO {
     private String customerAddress;
     private String city;
     private String province;
-    private int postalCode;
+    private String postalCode;
 
     public CustomerDTO() {
     }
 
-    public CustomerDTO(String customerId, String customerName, String customerAddress, String city, String province, int postalCode) {
+    public CustomerDTO(String customerId, String customerName, String customerAddress, String city, String province, String postalCode) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.customerAddress = customerAddress;
@@ -60,11 +60,11 @@ public class CustomerDTO {
         this.province = province;
     }
 
-    public int getPostalCode() {
+    public String getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(int postalCode) {
+    public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
 }
