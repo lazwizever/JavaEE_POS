@@ -45,17 +45,18 @@ public class CustomerServlet extends HttpServlet {
             switch (option) {
 
                 case "SEARCH":
-                    Customer customer = customerBO.searchCustomer(cId, connection);
+                    CustomerDTO customer = customerBO.searchCustomer(cId, connection);
 
                     JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
-                    objectBuilder.add("id", customer.getId());
-                    objectBuilder.add("name", customer.getName());
-                    objectBuilder.add("address", customer.getAddress());
+                    objectBuilder.add("id", customer.getCustomerId());
+                    objectBuilder.add("name", customer.getCustomerName());
+                    objectBuilder.add("address", customer.getCustomerAddress());
                     objectBuilder.add("city", customer.getCity());
                     objectBuilder.add("province", customer.getProvince());
                     objectBuilder.add("postalCode", customer.getPostalCode());
 
+                    writer.print(objectBuilder.build());
                     break;
 
                 case "GETALL":

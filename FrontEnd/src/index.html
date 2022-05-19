@@ -735,8 +735,6 @@
     loadAllCustomers();
 
 
-
-
     /*-----Load All Customers---------*/
 
     function loadAllCustomers() {
@@ -759,8 +757,10 @@
 
 
     $("#btnSearchCustomer").click(function () {
+        let cusId = $("#txtSearchCustomer").val();
+
         $.ajax({
-            url: "http://localhost:8080/backend/customer?option=SEARCH&cusId=" + $("#txtSearchCustomer").val(),
+            url: "http://localhost:8080/backend/customer?option=SEARCH&cusId=" + cusId,
             method: "GET",
             success: function (response) {
                 $("#inputnewId").val(response.id);
