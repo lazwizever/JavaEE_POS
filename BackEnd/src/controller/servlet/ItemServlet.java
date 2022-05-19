@@ -1,5 +1,7 @@
 package controller.servlet;
 
+import bussiness.BOFactory;
+import bussiness.custom.CustomerBO;
 import bussiness.custom.ItemBO;
 import dto.ItemDTO;
 
@@ -25,6 +27,9 @@ public class ItemServlet extends HttpServlet {
     @Resource(name = "java:comp/env/jdbc/pool")
     DataSource ds;
 
+
+    ItemBO itemBO = (ItemBO) BOFactory.getBOFactory().getBO(BOFactory.BOTypes.ITEM);
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -38,11 +43,11 @@ public class ItemServlet extends HttpServlet {
             Connection connection = ds.getConnection();
 
             ItemDTO item = new ItemDTO(
-                    jsonObject.getString("code"),
-                    jsonObject.getString("kind"),
-                    jsonObject.getString("itemName"),
-                    Integer.parseInt(jsonObject.getString("qtyOnHand")),
-                    Double.parseDouble(jsonObject.getString("unitPrice"))
+                    jsonObject.getString("itemId"),
+                    jsonObject.getString("description"),
+                    jsonObject.getString("packSize"),
+                    jsonObject.getString("packSize"),
+                    jsonObject.getString("packSize")
             );
 
             if (itemBO.saveItem(item, connection)){

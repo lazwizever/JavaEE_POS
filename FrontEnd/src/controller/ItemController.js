@@ -1,100 +1,38 @@
 generateItemIds();
 
 function saveItem(){
-    $("#customerTable>tr").off("click");
-
-    let itemCode = $("#itemCode").val();
-    let itemDescription = $("#inputDescription").val();
-    let packSize = $("#packSize").val();
-    let unitPrice = $("#unitPrice").val();
-    let qty = $("#inputQTy").val();
-    let discount = $("#inputDiscount").val();
-
-
-    $("#itemTable").empty();
-
-    var item = new Item(itemCode,itemDescription,packSize,unitPrice,qty,discount);
-    itemArray.push(item);
-    clearItemTextFields();
-
-    generateItemIds();
-    loadItemDetailsToTbl();
-    alert("Item has been added successfully");
-
-
-}
-
-function loadItemDetailsToTbl(){
-    $("#itemTable>tr").off("click");
-    $("#itemTable>tr").off("dblclick");
-
-    for (let i of itemArray) {
-        let row = `<tr><td>${i.getItemId()}</td><td>${i.getItemDescription()}</td><td>${i.getPackSize()}</td><td>${i.getUnitPrize()}</td><td>${i.getQtyOnHand()}</td></tr>`;
-        $("#itemTable").append(row);
-
-    }
-
-
-/*-----Delete Item Details When Double Clicking----*/
-
-    $("#itemTable>tr").dblclick(function (){
-        confirm("Do you really want to remove this item...?");
-
-        for (let i = 0; i < itemArray.length; i++) {
-            if ( $(this).children(":eq(0)").text() === itemArray[i].getItemId()) {
-                itemArray.splice(i, 1);
-
-                $(this).remove();
-                clearItemTextFields();
+    var data = $("#itemForm").serialize();
+    console.log(data);
+    $.ajax({
+        url: "http://localhost:8080/backend/item",
+        method: "POST",
+        data: data,
+        success: function (res) {
+            if (res.status == 200) {
+                alert(res.message);
+                loadAllItems();
+            } else {
+                alert(res.data);
             }
+
+        },
+        error: function (textStatus, error) {
+            console.log(textStatus);
+            console.log(error);
         }
     });
 
 
-
-/*-----Set item details to tbl--------*/
-
-    $("#itemTable>tr").click(function(){
-
-        let itemCode = $(this).children(':nth-child(1)').text();
-        $("#itemCode").val(itemCode);
-
-        let description = $(this).children(':nth-child(2)').text();
-        $("#inputDescription").val(description);
-
-        let packSize = $(this).children(':nth-child(3)').text();
-        $("#packSize").val(packSize);
-
-        let unitPrice = $(this).children(':nth-child(4)').text();
-        $("#unitPrice").val(unitPrice);
-
-        let QTY = $(this).children(':nth-child(5)').text();
-        $("#inputQTy").val(QTY);
-
-        let discount = $(this).children(':nth-child(6)').text();
-        $("#inputDiscount").val(discount);
-
-    });
 }
+
+function loadAllItems(){
+
+
+}
+
+
 
 function generateItemIds(){
-    if (itemArray.length !== 0){
-        var itemId = itemArray[itemArray.length-1].getItemId();
-        let splitTxt = itemId.split("I",2);
-        let newItemId = parseInt(splitTxt[1]) + 1;
-
-        if (parseInt(newItemId) <= 9){
-            $("#itemCode").val("I00" + newItemId);
-
-        }else if (parseInt(newItemId) <= 99){
-            $("#itemCode").val("I0" + newItemId);
-
-        }else if (parseInt(newItemId) <= 99){
-            $("#itemCode").val("I" + newItemId);
-        }
-    }else {
-        $("#itemCode").val("I001").css('font-weight', 'bold');
-    }
 }
 
 function clearItemTextFields(){
@@ -107,47 +45,11 @@ function clearItemTextFields(){
 }
 
 function deleteItem(){
-    confirm("Do you really want to remove this customer...?");
 
-    $("#itemTable").empty();
-    for (let i = 0; i < itemArray.length; i++) {
-        if ($("#itemCode").val() === itemArray[i].getItemId()) {
-            itemArray.splice(i, 1);
-
-            clearItemTextFields();
-        }
-    }
-    loadItemDetailsToTbl();
-    generateItemIds();
 }
 
 function updateItem(){
 
-    $("#itemTable>tr").off("click");
-
-    let itemCode = $("#itemCode").val();
-    let itemDescription = $("#inputDescription").val();
-    let packSize = $("#packSize").val();
-    let unitPrice = $("#unitPrice").val();
-    let qty = $("#inputQTy").val();
-    let discount = $("#inputDiscount").val();
-
-
-    $("#itemTable>tr").empty();
-    for (let i = 0; i < itemArray.length; i++) {
-        if ( $("#itemCode").val() === itemArray[i].getItemId()) {
-            itemArray.splice(i, 1);
-
-            clearItemTextFields();
-        }
-    }
-
-
-    var item = new Item(itemCode,itemDescription,packSize,unitPrice,qty,discount);
-    itemArray.push(item);
-
-    loadItemDetailsToTbl();
-    alert("Item has been successfully updated");
 
 }
 
@@ -161,11 +63,11 @@ function searchItem(id){
 }
 
 function disableItemRegisterBtn(){
-    if (validateAllItem()){
+   /* if (validateAllItem()){
         $("#btnItemRegister").attr('disabled', false);
     }else {
         $("#btnItemRegister").attr('disabled', true);
-    }
+    }*/
 }
 
 function validateItemDescription(){
@@ -267,12 +169,12 @@ disableItemRegisterBtn();
 
 
 function isItemIdExists(){
-    for (let i = 0; i < itemArray.length; i++) {
+  /*  for (let i = 0; i < itemArray.length; i++) {
         if ($("#itemCode").val() === itemArray[i].getItemId()) {
             return false;
         }
     }
-        return true;
+        return true;*/
 }
 
 function validateAllItem(){
@@ -304,34 +206,21 @@ function validateAllItem(){
 
 $("#btnItemRegister").click(function (){
     saveItem();
-    generateItemIds();
+   /* saveItem();
+    generateItemIds();*/
 });
 
 $("#btnItemDelete").click(function (){
-    deleteItem();
+/*    deleteItem();*/
 });
 
 $("#btnItemUpdate").click(function (){
-    updateItem();
-    generateItemIds();
+  /*  updateItem();
+    generateItemIds();*/
 });
 
 $("#btnItemSearch").click(function (){
 
-    var obItem = searchItem($("#txtItemSearch").val());
-
-    if (obItem){
-        $("#itemCode").val(obItem.getItemId());
-        $("#inputDescription").val(obItem.getItemDescription());
-        $("#packSize").val(obItem.getPackSize());
-        $("#unitPrice").val(obItem.getUnitPrize());
-        $("#inputQTy").val(obItem.getQtyOnHand());
-        $("#inputDiscount").val(obItem.getDiscount());
-
-    }else {
-        clearCustomerTextFields();
-        alert("No such a item");
-    }
 
 });
 

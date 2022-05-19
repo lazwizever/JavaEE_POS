@@ -3,14 +3,14 @@ package dto;
 public class ItemDTO {
     private String itemCode;
     private String description ;
-    private int packSize ;
-    private double unitPrice ;
-    private int qtyOnHand ;
+    private String packSize ;
+    private String  unitPrice ;
+    private String qtyOnHand ;
 
     public ItemDTO() {
     }
 
-    public ItemDTO(String itemCode, String description, int packSize, double unitPrice, int qtyOnHand) {
+    public ItemDTO(String itemCode, String description, String packSize, String unitPrice, String qtyOnHand) {
         this.setItemCode(itemCode);
         this.setDescription(description);
         this.setPackSize(packSize);
@@ -34,29 +34,27 @@ public class ItemDTO {
         this.description = description;
     }
 
-    public int getPackSize() {
+    public String getPackSize() {
         return packSize;
     }
 
-    public void setPackSize(int packSize) {
+    public void setPackSize(String packSize) {
         this.packSize = packSize;
     }
 
-    public double getUnitPrice() {
+    public String getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(double unitPrice) {
+    public void setUnitPrice(String unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public int getQtyOnHand() {
+    public String getQtyOnHand() {
         return qtyOnHand;
     }
 
-    public void setQtyOnHand(int qtyOnHand) {
+    public void setQtyOnHand(String qtyOnHand) {
         this.qtyOnHand = qtyOnHand;
     }
-
-
 }
