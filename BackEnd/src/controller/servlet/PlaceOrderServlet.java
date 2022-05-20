@@ -4,6 +4,8 @@ import bussiness.BOFactory;
 import bussiness.custom.CustomerBO;
 import bussiness.custom.PlaceOrderBO;
 import dto.CustomerDTO;
+import dto.ItemDetailsDTO;
+import dto.OrderDTO;
 import javafx.collections.ObservableList;
 
 import javax.annotation.Resource;
@@ -18,6 +20,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 @WebServlet(urlPatterns = "/placeOrder")
@@ -93,7 +96,7 @@ public class PlaceOrderServlet extends HttpServlet {
 
     }
 
-    /*@Override
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         PrintWriter writer = resp.getWriter();
@@ -104,30 +107,28 @@ public class PlaceOrderServlet extends HttpServlet {
 
         try {
 
-            Connection connection = dataSource.getConnection();
+            Connection connection = ds.getConnection();
 
-            ArrayList<OrderDetailDTO> orderDetailDTOS = new ArrayList<>();
+            ArrayList<ItemDetailsDTO> itemDetailsDTOS = new ArrayList<>();
+
             for (JsonValue item : items) {
                 JsonObject jo = item.asJsonObject();
-                orderDetailDTOS.add(new OrderDetailDTO(
-                        jo.getString("oId"),
+
+                itemDetailsDTOS.add(new ItemDetailsDTO(
                         jo.getString("itemId"),
-                        jo.getString("itemKind"),
-                        jo.getString("itemName"),
-                        Integer.parseInt(jo.getString("sellQty")),
-                        Double.parseDouble(jo.getString("unitPrice")),
-                        Integer.parseInt(jo.getString("itemDiscount")),
-                        Double.parseDouble(jo.getString("total"))
+                        jo.getString("description"),
+                        jo.getString("customerQTY"),
+                        jo.getString("uniPrices"),
+                        String.valueOf(jo.getString("total"))
                 ));
             }
 
             OrderDTO orderDTO = new OrderDTO(
                     jsonObject.getString("orderId"),
-                    jsonObject.getString("cusId"),
+                    jsonObject.getString("customerId"),
                     jsonObject.getString("orderDate"),
-                    Double.parseDouble(jsonObject.getString("grossTotal")),
-                    Double.parseDouble(jsonObject.getString("netTotal")),
-                    orderDetailDTOS
+                    String.valueOf(jsonObject.getString("netTotal")),
+                    itemDetailsDTOS
             );
 
             if (placeOrderBO.placeOrder(orderDTO,connection)) {
@@ -152,5 +153,5 @@ public class PlaceOrderServlet extends HttpServlet {
 
             e.printStackTrace();
         }
-    }*/
+    }
 }

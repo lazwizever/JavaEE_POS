@@ -50,7 +50,7 @@ public class ItemBOImpl implements ItemBO {
 
         ItemDTO itemDTO = new ItemDTO(
                 item.getItemCode(),item.getDescription(),String.valueOf(item.getPackSize()),String.valueOf(item.getUnitPrice()),
-                String.valueOf(item.getPackSize())
+                String.valueOf(item.getQtyOnHand())
         );
         return itemDTO;
     }

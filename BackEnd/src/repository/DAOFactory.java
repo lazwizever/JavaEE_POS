@@ -2,6 +2,7 @@ package repository;
 
 import repository.custom.impl.CustomerDAOImpl;
 import repository.custom.impl.ItemDAOImpl;
+import repository.custom.impl.OrderDAOImpl;
 
 public class DAOFactory {
 
@@ -21,7 +22,7 @@ public class DAOFactory {
                 case ITEM:
                     return new ItemDAOImpl();
                 /*case ORDER:
-                    return new PlaceOrderDAOImpl();*/
+                    return new OrderDAOImpl();*/
                 case CUSTOMER:
                     return new CustomerDAOImpl();
                 default:
@@ -30,7 +31,7 @@ public class DAOFactory {
         }
 
     public  enum  DAOTypes{
-        CUSTOMER,ITEM
+        CUSTOMER,ITEM,ORDER
     }
 
 

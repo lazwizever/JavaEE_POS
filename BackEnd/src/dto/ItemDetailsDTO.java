@@ -1,5 +1,9 @@
 package dto;
 
+import entity.ItemDetails;
+
+import java.sql.Connection;
+
 public class ItemDetailsDTO {
     private String itemCode;
     private String description;
