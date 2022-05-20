@@ -53,7 +53,6 @@ public class ItemServlet extends HttpServlet {
                     objectBuilder.add("packSize", itemDTO1.getPackSize());
                     objectBuilder.add("unitPrice", itemDTO1.getUnitPrice());
                     objectBuilder.add("qtyOnHand", itemDTO1.getQtyOnHand());
-
                     writer.print(objectBuilder.build());
                     break;
 

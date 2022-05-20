@@ -1,3 +1,6 @@
+loadAllCustomers();
+
+var customerArray = [];
 
 function saveCustomer() {
     var data = $("#customerForm").serialize();
@@ -29,6 +32,7 @@ function loadAllCustomers() {
         url: "http://localhost:8080/backend/customer?option=GETALL",
         method: "GET",
         success: function (resp) {
+            customerArray = resp.data;
             for (const customer of resp.data) {
                 let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.city}</td><td>${customer.province}</td><td>${customer.postalCode}</td></tr>`;
                 $("#customerTable").append(row);
@@ -164,6 +168,7 @@ var regExPostalCode = /^([0-9]{3,5})$/;
 
 
 function validateCustomerName(){
+    console.log("validate customer name");
     let input = $("#custName").val();
 
     if (regExCusName.test(input)) {
@@ -186,6 +191,11 @@ function validateCustomerName(){
 $("#custName").keyup(function () {
 disableCusRegisterBtn();
 });
+
+$("#inputnewId").keyup(function () {
+    disableCusRegisterBtn();
+});
+
 
 
 function validateCusAddress(){
@@ -268,13 +278,13 @@ function disableCusRegisterBtn(){
 }
 
 function isCustomerIdExist(){
-/*    for (let i = 0; i < customerArray.length; i++) {
+    for (const customer of customerArray) {
 
-        if ($("#inputnewId").val() === customerArray[i].getCustomerId()){
+        if ($("#inputnewId").val() === customer.id){
             return false;
         }
     }
-    return true;*/
+    return true;
 }
 
 function validateAll(){
@@ -283,7 +293,11 @@ function validateAll(){
             if (validateCusAddress()){
                 if (validateCustomerCity()){
                     if (validateCustomerPostalCode()){
-                        return true;
+                        if (isCustomerIdExist()){
+                            return true;
+                        }else {
+                            return false;
+                        }
                     }else {
                         return false;
                     }

@@ -1,5 +1,7 @@
 loadAllItems();
 
+var itemArray = [];
+
 function saveItem(){
     var data = $("#itemForm").serialize();
     console.log(data);
@@ -31,6 +33,7 @@ function loadAllItems(){
         url: "http://localhost:8080/backend/item?option=GETALL",
         method: "GET",
         success: function (resp) {
+            itemArray = resp.data;
             for (const item of resp.data) {
                 let row = `<tr><td>${item.id}</td><td>${item.description}</td><td>${item.packSize}</td><td>${item.unitPrice}</td><td>${item.qtyOnHand}</td></tr>`;
                 $("#itemTable").append(row);
@@ -138,11 +141,12 @@ function searchItem(){
         url: "http://localhost:8080/backend/item?option=SEARCH&itemCode=" + itemId,
         method: "GET",
         success: function (response) {
+
             $("#itemCode").val(response.id);
-            $("#description").val(response.description);
+            $("#inputDescription").val(response.description);
             $("#packSize").val(response.packSize);
             $("#unitPrice").val(response.unitPrice);
-            $("#inputQTy").val(response.inputQTY);
+            $("#inputQTy").val(response.qtyOnHand);
 
         },
         error: function (ob, statusText, error) {
@@ -153,14 +157,15 @@ function searchItem(){
 }
 
 function disableItemRegisterBtn(){
-   /* if (validateAllItem()){
+    if (validateAllItem()){
         $("#btnItemRegister").attr('disabled', false);
     }else {
         $("#btnItemRegister").attr('disabled', true);
-    }*/
+    }
 }
 
 function validateItemDescription(){
+    console.log("validateItemdesclll");
     let input = $("#inputDescription").val();
 
     if (regExDescription.test(input)) {
@@ -183,6 +188,11 @@ function validateItemDescription(){
 $("#inputDescription").keyup(function (e) {
 disableItemRegisterBtn();
 });
+
+$("#itemCode").keyup(function (e) {
+    disableItemRegisterBtn();
+});
+
 
 function validatePackSize(){
     let input = $("#packSize").val();
@@ -259,22 +269,27 @@ disableItemRegisterBtn();
 
 
 function isItemIdExists(){
-  /*  for (let i = 0; i < itemArray.length; i++) {
-        if ($("#itemCode").val() === itemArray[i].getItemId()) {
+    for (const item of itemArray) {
+        if ($("#itemCode").val() == item.id) {
             return false;
         }
     }
-        return true;*/
+        return true;
 }
 
 function validateAllItem(){
 
-    if (isItemIdExists()){
+
         if (validateItemDescription()){
             if (validatePackSize()){
                 if (validateUnitPrice()){
                     if (validateQTY()){
+                        if (isItemIdExists()){
                         return true;
+                        }else {
+                            return false;
+                        }
+
                     }else {
                         return false;
                     }
@@ -287,17 +302,12 @@ function validateAllItem(){
         }else {
             return false;
         }
-    }else {
-        return false;
-    }
-
 
 }
 
 $("#btnItemRegister").click(function (){
     saveItem();
-   /* saveItem();
-    generateItemIds();*/
+
 });
 
 $("#btnItemDelete").click(function (){
