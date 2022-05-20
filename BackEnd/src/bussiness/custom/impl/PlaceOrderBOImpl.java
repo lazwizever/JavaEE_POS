@@ -22,6 +22,7 @@ public class PlaceOrderBOImpl implements PlaceOrderBO {
     CustomerDAO customerDAO = (CustomerDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.CUSTOMER);
     OrderDAO orderDAO = (OrderDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ORDER);
     ItemDAO itemDAO = (ItemDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ITEM);
+    ItemDetailsDAO itemDetailsDAO = (ItemDetailsDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ITEM);
 
     @Override
     public CustomerDTO getCustomer(String cId, Connection connection) throws SQLException, ClassNotFoundException {
@@ -53,12 +54,10 @@ public class PlaceOrderBOImpl implements PlaceOrderBO {
             connection = con;
             connection.setAutoCommit(false);
 
-
-
             if (orderDAO.add(order,connection)){
                 L1:for (ItemDetails temp : orderItems) {
-                    if (ItemDetailsDAO.add(temp)){
-                        if (itemDAO.updateStock(orderItem.getItemCode(),orderItem.getOderQTY())){
+                    if (itemDetailsDAO.add(temp,connection)){
+                        if (itemDAO.updateStock(temp.getItemCode(),temp.getCustomerQTY(),connection)){
                             continue L1;
                         }else {
                             connection.rollback();

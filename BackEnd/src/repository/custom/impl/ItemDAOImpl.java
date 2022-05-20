@@ -68,4 +68,11 @@ public class ItemDAOImpl implements ItemDAO {
             return null;
         }
     }
+
+
+    @Override
+    public boolean updateStock(String itemCode, int customerQTY, Connection connection) throws SQLException, ClassNotFoundException {
+        int qyOnHand = search(itemCode,connection).getQtyOnHand();
+        return CrudUtil.executeUpdate(connection,"UPDATE Item SET qtyOnHand = ? WHERE itemCode = ?",qyOnHand-customerQTY,itemCode);
+    }
 }
