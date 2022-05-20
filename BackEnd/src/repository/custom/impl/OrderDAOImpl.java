@@ -1,4 +1,40 @@
 package repository.custom.impl;
 
-public class OrderDAOImpl {
+import entity.Order;
+import javafx.collections.ObservableList;
+import repository.custom.OrderDAO;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+public class OrderDAOImpl implements OrderDAO {
+    @Override
+    public ObservableList<Order> getAll(Connection connection) throws SQLException, ClassNotFoundException {
+        return null;
+    }
+
+    @Override
+    public boolean add(Order order, Connection connection) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public boolean update(Order order, Connection connection) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public boolean delete(String s, Connection connection) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public Order search(String s, Connection connection) throws SQLException, ClassNotFoundException {
+        return null;
+    }
+
+    @Override
+    public boolean add(Order order) {
+        return false;
+    }
 }

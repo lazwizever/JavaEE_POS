@@ -36,28 +36,16 @@ function clearPlaceOrderFields(){
 
 function placeOrder(){
 
-    let detailsArray = new Array();
-
-        var orderDetail = {
-            itemId: $("#itemId").val(),
-            description: $("#description").val(),
-            customerQTY: $("#custQTY").val(),
-            uniPrices: $("#unitPrices").val(),
-            total: $("#netAmount").val(),
-
-        }
-        detailsArray.push(orderDetail);
-
     var order={
         orderId:$("#orderId").val(),
         customerId:$("#customerId1").val(),
         orderDate:$("#oDate").val(),
         netTotal:$("#netAmount").val(),
-        items:detailsArray
+        items:itemDetailsArray
     }
 
     $.ajax({
-        url:"http://localhost:8080/backend/purchaseOrder?",
+        url:"http://localhost:8080/backend/placeOrder?",
         method:"POST",
         contentType:"application/json",
         data: JSON.stringify(order),
@@ -65,7 +53,7 @@ function placeOrder(){
             if (response.status == 200){
                 if (response.message == "Successfully Purchased Order."){
                     alert(response.message);
-
+                    loadAllItems();
                 }else if (response.message == "Error"){
                     alert(response.data);
                 }

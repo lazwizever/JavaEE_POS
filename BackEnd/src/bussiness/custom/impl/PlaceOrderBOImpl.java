@@ -35,49 +35,61 @@ public class PlaceOrderBOImpl implements PlaceOrderBO {
     }
 
     @Override
-    public boolean placeOrder(OrderDTO orderDTO, Connection connection) {
-        return false;
-    }
+    public boolean placeOrder(OrderDTO orderDTO, Connection con) {
+        Connection connection = null;
 
-   /* @Override
-    public boolean placeOrder(OrderDTO orderDTO, Connection connection) {
-        connection = null;
-            try {
-                connection.setAutoCommit(false);
+        Order order = new Order(orderDTO.getOrderId(),orderDTO.getCusId(),orderDTO.getOrderDate(),Double.parseDouble(orderDTO.getTotal()));
 
-                boolean ifSaveOrder = orderDAO.add(new Order(
-                                orderDTO.getOrderId(),
-                                orderDTO.getCusId(),
-                                orderDTO.getOrderDate(),
-                                Double.parseDouble(orderDTO.getTotal())
+        ArrayList<ItemDetailsDTO> orders = orderDTO.getItems();
+        ArrayList<ItemDetails> orderItems = new ArrayList<>();
 
-                ));
+        for (ItemDetailsDTO itemDetailsDTO : orders) {
+            orderItems.add(new ItemDetails(itemDetailsDTO.getItemCode(),itemDetailsDTO.getDescription(),
+                    Integer.parseInt(itemDetailsDTO.getCustomerQTY()),Double.parseDouble(itemDetailsDTO.getUnitPrice()),
+                    Double.parseDouble(itemDetailsDTO.getTotal())));
+        }
 
-                if (ifSaveOrder){
-                    if (saveItemDetail(orderDTO,connection)){
-                        connection.commit();
-                        return true;
+        try {
+            connection = con;
+            connection.setAutoCommit(false);
+
+
+
+            if (orderDAO.add(order,connection)){
+                L1:for (ItemDetails temp : orderItems) {
+                    if (ItemDetailsDAO.add(temp)){
+                        if (itemDAO.updateStock(orderItem.getItemCode(),orderItem.getOderQTY())){
+                            continue L1;
+                        }else {
+                            connection.rollback();
+                            return false;
+                        }
                     }else {
                         connection.rollback();
                         return false;
                     }
-                }else {
-                    connection.rollback();
-                    return false;
                 }
-            } catch (SQLException throwables) {
-            } finally {
-                try {
-
-                    connection.setAutoCommit(true);
-
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
+                connection.commit();
+                return true;
+            }else {
+                connection.rollback();
+                return false;
             }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return false;
+    }
 
-            return true;
-    }*/
+
 
 
     /*private boolean saveItemDetail(OrderDTO orderDTO, Connection connection) {

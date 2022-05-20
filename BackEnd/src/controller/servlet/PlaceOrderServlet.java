@@ -105,49 +105,56 @@ public class PlaceOrderServlet extends HttpServlet {
         JsonObject jsonObject = reader.readObject();
         JsonArray items = jsonObject.getJsonArray("items");
 
+        ArrayList<ItemDetailsDTO> allItems = new ArrayList<>();
+
+        for (JsonValue temp : items) {
+
+            JsonObject jsonObject1 = temp.asJsonObject();
+
+            allItems.add(new ItemDetailsDTO(
+                    jsonObject1.getString("__itemCode"),
+                    jsonObject1.getString("__description"),
+                    jsonObject1.getString("__customerQTY"),
+                    jsonObject1.getString("__unitPrice"),
+                    jsonObject1.getString("__total")
+            ));
+        }
+
         try {
-
             Connection connection = ds.getConnection();
-
-            ArrayList<ItemDetailsDTO> itemDetailsDTOS = new ArrayList<>();
-
-            for (JsonValue item : items) {
-                JsonObject jo = item.asJsonObject();
-
-                itemDetailsDTOS.add(new ItemDetailsDTO(
-                        jo.getString("itemId"),
-                        jo.getString("description"),
-                        jo.getString("customerQTY"),
-                        jo.getString("uniPrices"),
-                        String.valueOf(jo.getString("total"))
-                ));
-            }
-
             OrderDTO orderDTO = new OrderDTO(
+
                     jsonObject.getString("orderId"),
                     jsonObject.getString("customerId"),
                     jsonObject.getString("orderDate"),
-                    String.valueOf(jsonObject.getString("netTotal")),
-                    itemDetailsDTOS
+                    jsonObject.getString("netTotal"),
+                    allItems
+
             );
 
             if (placeOrderBO.placeOrder(orderDTO,connection)) {
                 resp.setStatus(HttpServletResponse.SC_OK);
                 JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                objectBuilder.add("message", "Successfully Purchased Order.");
-                objectBuilder.add("status", resp.getStatus());
+                objectBuilder.add("message","Customer Successfully Updated.");
+                objectBuilder.add("status",resp.getStatus());
+                writer.print(objectBuilder.build());
+
+            }else{
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("message","Update Failed.");
+                objectBuilder.add("status",400);
                 writer.print(objectBuilder.build());
 
             }
-
             connection.close();
 
         } catch (SQLException e) {
+
             resp.setStatus(HttpServletResponse.SC_OK);
 
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
             objectBuilder.add("data",e.getLocalizedMessage());
-            objectBuilder.add("message","Error");
+            objectBuilder.add("message","Update Failed.");
             objectBuilder.add("status",resp.getStatus());
             writer.print(objectBuilder.build());
 
