@@ -19,14 +19,6 @@ function loadAllCustomerIds(){
     }
 }
 
-function setItemDetailsFromItemCode(){
-
-}
-
-function generateOrderId(){
-
-}
-
 function clearPlaceOrderFields(){
     clearItemsFieldsPlaceOrder();
 
@@ -86,8 +78,6 @@ function placeOrder(){
         }
     });
 
-
-
 }
 
 $("#customerId").on("change",function(){
@@ -130,19 +120,6 @@ $("#cmbItemIds").on("change",function(){
     });
 });
 
-
-
-function searchPlaceOrder(oId){
-
-}
-
-function setCustomerNameCusId(){
-
-}
-
-function updatePlaceOrder(){
-
-}
 
 function clearItemsFieldsPlaceOrder(){
     $("#description").val("");
@@ -233,6 +210,43 @@ function setNetAmount(){
 
 }
 
+function validateAll(){
+    let netAmount = $("#netAmount").val();
+    let cash = $("#cash").val();
+
+    let net = parseInt(netAmount);
+    let cash1 = parseInt(cash);
+
+    if ($("#orderId").val()!=""){
+        if ($("#customerId1").val()!=""){
+            if (itemDetailsArray.length!=0){
+                if ($("#cash").val()!="" && cash1>=net){
+                    return true;
+                }else {
+                    return false;
+                }
+            }else {
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }else {
+        return false;
+    }
+}
+
+function enableDisablePlaceOrderBtn(){
+    if (validateAll()){
+        $("#btnPlaceOrder").attr("disabled",false);
+    }else {
+        $("#btnPlaceOrder").attr("disabled",true);
+    }
+
+
+}
+
+
 
 $("#btnPlaceOrder").click(function (){
 
@@ -240,10 +254,6 @@ $("#btnPlaceOrder").click(function (){
 });
 
 $("#btnSearchOrder").click(function (){
-
-});
-
-$("#btnUpdateOrder").click(function (){
 
 });
 
@@ -287,7 +297,7 @@ $("#cash").keyup(function (){
     if (discount==""){
         $("#balanceLabel").val(cash - grossAmount);
     }
-
+enableDisablePlaceOrderBtn();
 });
 
 
@@ -301,13 +311,9 @@ var regExCustomerQty = /^([0-9]{1,10})$/;
 $("#custQTY").keyup(function (){
 
     let input = parseInt($("#custQTY").val());
-    let qty =0;
+    let qty =    parseInt($("#qTY").val());
 
-    for (let i = 0; i < itemArray.length; i++) {
-        if ($("#itemId").val() === itemArray[i].getItemId()){
-            qty = parseInt(itemArray[i].getQtyOnHand());
-        }
-    }
+
 
     if (regExCustomerQty.test(input)) {
         if (qty >= input){
