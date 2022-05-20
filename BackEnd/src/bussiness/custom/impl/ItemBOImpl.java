@@ -3,6 +3,7 @@ package bussiness.custom.impl;
 import bussiness.custom.ItemBO;
 import dto.CustomerDTO;
 import dto.ItemDTO;
+import entity.Customer;
 import entity.Item;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -41,5 +42,26 @@ public class ItemBOImpl implements ItemBO {
             items.add(itemDTO);
         }
         return items;
+    }
+
+    @Override
+    public ItemDTO searchCustomer(String itemId, Connection connection) throws SQLException, ClassNotFoundException {
+        Item item = itemDAO.search(itemId,connection);
+
+        ItemDTO itemDTO = new ItemDTO(
+                item.getItemCode(),item.getDescription(),String.valueOf(item.getPackSize()),String.valueOf(item.getUnitPrice()),
+                String.valueOf(item.getPackSize())
+        );
+        return itemDTO;
+    }
+
+    @Override
+    public boolean updateItem(ItemDTO itemDTO, Connection connection) throws SQLException, ClassNotFoundException {
+        Item item = new Item(
+                itemDTO.getItemCode(),itemDTO.getDescription(),Integer.parseInt(itemDTO.getPackSize()),
+                Double.parseDouble(itemDTO.getUnitPrice()),Integer.parseInt(itemDTO.getQtyOnHand())
+        );
+
+        return itemDAO.update(item,connection);
     }
 }

@@ -142,15 +142,7 @@ public class CustomerServlet extends HttpServlet {
 
         try {
             Connection connection = ds.getConnection();
-
-            System.out.println(req.getParameter("postalCode"));
             CustomerDTO customerDTO = new CustomerDTO(
-                    /*req.getParameter("id"),
-                    req.getParameter("name"),
-                    req.getParameter("address"),
-                    req.getParameter("city"),
-                    req.getParameter("province"),
-                   req.getParameter("postalCode")*/
 
                     jsonObject.getString("id"),
                     jsonObject.getString("name"),

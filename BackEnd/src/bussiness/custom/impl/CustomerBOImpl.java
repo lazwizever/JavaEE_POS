@@ -56,7 +56,6 @@ public class CustomerBOImpl implements CustomerBO{
 
     @Override
     public boolean updateCustomer(CustomerDTO customerDTO, Connection connection) throws SQLException, ClassNotFoundException {
-        System.out.println(customerDTO.getPostalCode());
         Customer customer = new Customer(
                 customerDTO.getCustomerId(),customerDTO.getCustomerName(),customerDTO.getCustomerAddress(),
                 customerDTO.getCity(),customerDTO.getProvince(),Integer.parseInt(customerDTO.getPostalCode())

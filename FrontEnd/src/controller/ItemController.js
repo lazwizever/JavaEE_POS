@@ -34,7 +34,7 @@ function loadAllItems(){
             for (const item of resp.data) {
                 let row = `<tr><td>${item.id}</td><td>${item.description}</td><td>${item.packSize}</td><td>${item.unitPrice}</td><td>${item.qtyOnHand}</td></tr>`;
                 $("#itemTable").append(row);
-                /*bindClickEvents();*/
+                bindClickEventsForItems();
             }
         },
         error:function (ob,state,error){
@@ -44,9 +44,22 @@ function loadAllItems(){
 
 }
 
+function bindClickEventsForItems() {
+    $("#itemTable>tr").click(function () {
 
+        let itemId = $(this).children().eq(0).text();
+        let descriptions = $(this).children().eq(1).text();
+        let packSize = $(this).children().eq(2).text();
+        let unitPrice = $(this).children().eq(3).text();
+        let qyOnHand = $(this).children().eq(4).text();
 
-function generateItemIds(){
+        $("#itemCode").val(itemId);
+        $("#inputDescription").val(descriptions);
+        $("#packSize").val(packSize);
+        $("#unitPrice").val(unitPrice);
+        $("#inputQTy").val(qyOnHand);
+
+    });
 }
 
 function clearItemTextFields(){
@@ -60,9 +73,9 @@ function clearItemTextFields(){
 
 function deleteItem(){
     let itemId = $("#itemCode").val();
-    console.log(cusId);
+    console.log(itemId);
     $.ajax({
-        url: "http://localhost:8080/backend/customer?CusID=" + itemId,
+        url: "http://localhost:8080/backend/item?itemId=" + itemId,
         method: "DELETE",
 
         success: function (res) {
@@ -88,17 +101,55 @@ function deleteItem(){
 }
 
 function updateItem(){
+    var itemOb = {
+        id: $("#itemCode").val(),
+        description: $("#inputDescription").val(),
+        packSize: $("#packSize").val(),
+        unitPrice: $("#unitPrice").val(),
+        qtyOnHand: $("#inputQTy").val(),
+    }
 
+    $.ajax({
+        url: "http://localhost:8080/backend/item",
+        method: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify(itemOb),
+        success: function (res) {
+            if (res.status == 200) {
+                alert(res.message);
+                loadAllItems();
+            } else if (res.status == 400) {
+                alert(res.message);
+            } else {
+                alert(res.data);
+            }
+        },
+        error: function (ob, errorStus) {
+            console.log(ob);
+        }
+    });
 
 }
 
-function searchItem(id){
+function searchItem(){
+    let itemId = $("#txtItemSearch").val();
+    console.log(itemId);
+    $.ajax({
+        url: "http://localhost:8080/backend/item?option=SEARCH&itemCode=" + itemId,
+        method: "GET",
+        success: function (response) {
+            $("#itemCode").val(response.id);
+            $("#description").val(response.description);
+            $("#packSize").val(response.packSize);
+            $("#unitPrice").val(response.unitPrice);
+            $("#inputQTy").val(response.inputQTY);
 
-    for (let i = 0; i < itemArray.length; i++) {
-        if (id === itemArray[i].getItemId()){
-            return itemArray[i];
+        },
+        error: function (ob, statusText, error) {
+            alert("No Such Customer");
+            loadAllCustomers();
         }
-    }
+    });
 }
 
 function disableItemRegisterBtn(){
@@ -250,20 +301,19 @@ $("#btnItemRegister").click(function (){
 });
 
 $("#btnItemDelete").click(function (){
-/*    deleteItem();*/
+    deleteItem();
 });
 
 $("#btnItemUpdate").click(function (){
-  /*  updateItem();
-    generateItemIds();*/
+    updateItem();
 });
 
 $("#btnItemSearch").click(function (){
-
+    searchItem();
 
 });
 
-$("#btnClearCustomerFields").click(function (){
+$("#btnClearItemFields").click(function (){
     clearItemTextFields();
 });
 

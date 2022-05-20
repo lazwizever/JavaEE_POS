@@ -34,31 +34,30 @@ public class ItemServlet extends HttpServlet {
 
         resp.setContentType("application/json");
 
-        String cId = req.getParameter("cusId");
+        String itemId = req.getParameter("itemCode");
         String option = req.getParameter("option");
         PrintWriter writer = resp.getWriter();
 
         try {
             Connection connection = ds.getConnection();
 
-          //  switch (option) {
+            switch (option) {
 
-               /* case "SEARCH":
-                    CustomerDTO customer = customerBO.searchCustomer(cId, connection);
+                case "SEARCH":
+                    ItemDTO itemDTO1 = itemBO.searchCustomer(itemId, connection);
 
                     JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
-                    objectBuilder.add("id", customer.getCustomerId());
-                    objectBuilder.add("name", customer.getCustomerName());
-                    objectBuilder.add("address", customer.getCustomerAddress());
-                    objectBuilder.add("city", customer.getCity());
-                    objectBuilder.add("province", customer.getProvince());
-                    objectBuilder.add("postalCode", customer.getPostalCode());
+                    objectBuilder.add("id", itemDTO1.getItemCode());
+                    objectBuilder.add("description", itemDTO1.getDescription());
+                    objectBuilder.add("packSize", itemDTO1.getPackSize());
+                    objectBuilder.add("unitPrice", itemDTO1.getUnitPrice());
+                    objectBuilder.add("qtyOnHand", itemDTO1.getQtyOnHand());
 
                     writer.print(objectBuilder.build());
-                    break;*/
+                    break;
 
-               // case "GETALL":
+                case "GETALL":
 
                     ObservableList<ItemDTO> allItems = itemBO.getAllItems(connection);
                     JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
@@ -81,8 +80,8 @@ public class ItemServlet extends HttpServlet {
                     response.add("data", arrayBuilder.build());
                     writer.print(response.build());
 
-                 //   break;
-           // }
+                    break;
+            }
 
             connection.close();
 
@@ -134,5 +133,60 @@ public class ItemServlet extends HttpServlet {
 
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doDelete(req, resp);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        PrintWriter writer = resp.getWriter();
+
+        JsonReader reader = Json.createReader(req.getReader());
+        JsonObject jsonObject = reader.readObject();
+
+        try {
+            Connection connection = ds.getConnection();
+            ItemDTO itemDTO = new ItemDTO(
+
+                    jsonObject.getString("id"),
+                    jsonObject.getString("description"),
+                    jsonObject.getString("packSize"),
+                    jsonObject.getString("unitPrice"),
+                    jsonObject.getString("qtyOnHand")
+            );
+
+            if (itemBO.updateItem(itemDTO,connection)) {
+                resp.setStatus(HttpServletResponse.SC_OK);
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("message","Customer Successfully Updated.");
+                objectBuilder.add("status",resp.getStatus());
+                writer.print(objectBuilder.build());
+
+            }else{
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("message","Update Failed.");
+                objectBuilder.add("status",400);
+                writer.print(objectBuilder.build());
+
+            }
+            connection.close();
+
+        } catch (SQLException | ClassNotFoundException e) {
+
+            resp.setStatus(HttpServletResponse.SC_OK);
+
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+            objectBuilder.add("data",e.getLocalizedMessage());
+            objectBuilder.add("message","Update Failed.");
+            objectBuilder.add("status",resp.getStatus());
+            writer.print(objectBuilder.build());
+
+            e.printStackTrace();
+        }
+
     }
 }

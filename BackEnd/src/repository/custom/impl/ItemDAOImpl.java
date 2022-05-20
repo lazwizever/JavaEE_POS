@@ -44,7 +44,8 @@ public class ItemDAOImpl implements ItemDAO {
 
     @Override
     public boolean update(Item item, Connection connection) throws SQLException, ClassNotFoundException {
-        return false;
+        return CrudUtil.executeUpdate(connection, "UPDATE Item SET description = ?,packSize = ?,unitPrice = ?,qtyOnHand = ? WHERE itemCode = ?",item.getDescription(),
+                item.getPackSize(),item.getUnitPrice(),item.getQtyOnHand(),item.getItemCode());
     }
 
     @Override
@@ -53,7 +54,18 @@ public class ItemDAOImpl implements ItemDAO {
     }
 
     @Override
-    public Item search(String s, Connection connection) throws SQLException, ClassNotFoundException {
-        return null;
+    public Item search(String itenId, Connection connection) throws SQLException, ClassNotFoundException {
+        ResultSet rst = CrudUtil.executeQuery(connection,"SELECT * FROM Item WHERE itemCode =?",itenId);
+        if (rst.next()){
+            return new Item(
+                    rst.getString(1),
+                    rst.getString(2),
+                    Integer.parseInt(rst.getString(3)),
+                    Double.parseDouble(rst.getString(4)),
+                    Integer.parseInt(rst.getString(5))
+            );
+        }else {
+            return null;
+        }
     }
 }
