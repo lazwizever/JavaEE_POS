@@ -51,12 +51,10 @@ function placeOrder(){
         data: JSON.stringify(order),
         success:function (response) {
             if (response.status == 200){
-                if (response.message == "Successfully Purchased Order."){
                     alert(response.message);
                     loadAllItems();
                 }else if (response.message == "Error"){
                     alert(response.data);
-                }
             }else if (response.status == "400"){
                 alert(response.data);
             }

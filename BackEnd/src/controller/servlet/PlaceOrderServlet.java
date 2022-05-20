@@ -140,7 +140,7 @@ public class PlaceOrderServlet extends HttpServlet {
             if (placeOrderBO.placeOrder(orderDTO,connection)) {
                 resp.setStatus(HttpServletResponse.SC_OK);
                 JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                objectBuilder.add("message","Order Successfully Added.");
+                objectBuilder.add("message","Successfully Purchased Order.");
                 objectBuilder.add("status",resp.getStatus());
                 writer.print(objectBuilder.build());
 
