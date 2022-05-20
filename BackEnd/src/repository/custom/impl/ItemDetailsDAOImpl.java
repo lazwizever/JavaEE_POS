@@ -2,6 +2,7 @@ package repository.custom.impl;
 
 import entity.ItemDetails;
 import javafx.collections.ObservableList;
+import repository.CrudUtil;
 import repository.custom.ItemDetailsDAO;
 
 import java.sql.Connection;
@@ -15,7 +16,8 @@ public class ItemDetailsDAOImpl implements ItemDetailsDAO {
 
     @Override
     public boolean add(ItemDetails itemDetails, Connection connection) throws SQLException, ClassNotFoundException {
-        return false;
+        return CrudUtil.executeUpdate(connection,"INSERT INTO ItemDetails VALUES(?,?,?,?,?,?)",itemDetails.getItemCode(),itemDetails.getOrderId(),itemDetails.getDescription(),itemDetails.getCustomerQTY(),
+                itemDetails.getUnitPrice(),itemDetails.getTotal());
     }
 
     @Override

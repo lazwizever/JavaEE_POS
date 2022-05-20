@@ -63,6 +63,8 @@ function placeOrder(){
         },
         error:function (ob , statusText , error) {
             alert(statusText);
+            console.log(statusText);
+            console.log(error);
         }
     });
 

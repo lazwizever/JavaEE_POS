@@ -37,7 +37,6 @@ public class PlaceOrderBOImpl implements PlaceOrderBO {
 
     @Override
     public boolean placeOrder(OrderDTO orderDTO, Connection con) {
-        System.out.println("This is placeOrder");
         Connection connection = null;
 
         Order order = new Order(orderDTO.getOrderId(),orderDTO.getCusId(),orderDTO.getOrderDate(),Double.parseDouble(orderDTO.getTotal()));
@@ -46,7 +45,7 @@ public class PlaceOrderBOImpl implements PlaceOrderBO {
         ArrayList<ItemDetails> orderItems = new ArrayList<>();
 
         for (ItemDetailsDTO itemDetailsDTO : orders) {
-            orderItems.add(new ItemDetails(itemDetailsDTO.getItemCode(),itemDetailsDTO.getDescription(),
+            orderItems.add(new ItemDetails(itemDetailsDTO.getItemCode(),orderDTO.getOrderId(),itemDetailsDTO.getDescription(),
                     Integer.parseInt(itemDetailsDTO.getCustomerQTY()),Double.parseDouble(itemDetailsDTO.getUnitPrice()),
                     Double.parseDouble(itemDetailsDTO.getTotal())));
         }
@@ -90,26 +89,4 @@ public class PlaceOrderBOImpl implements PlaceOrderBO {
     }
 
 
-
-
-    /*private boolean saveItemDetail(OrderDTO orderDTO, Connection connection) {
-        for (ItemDetailsDTO item : orderDTO.getItems()) {
-            boolean ifOrderDetailSaved = ItemDetailsDAO.add(new ItemDetails(
-                            item.getItemCode(), item.getDescription(), Integer.parseInt(item.getCustomerQTY()),
-                            Double.parseDouble(item.getUnitPrice()), Double.parseDouble(item.getTotal())),
-                    connection
-            );
-            if (ifOrderDetailSaved){
-                if (updateQtyOnHand(item.getItemCode(),item.getSellQty(),connection)){
-
-                }else {
-                    return false;
-                }
-            }else {
-                return false;
-            }
-        }
-
-        return true;
-    }*/
 }

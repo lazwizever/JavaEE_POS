@@ -107,18 +107,20 @@ public class PlaceOrderServlet extends HttpServlet {
 
         ArrayList<ItemDetailsDTO> allItems = new ArrayList<>();
 
-
         for (JsonValue temp : items) {
 
             JsonObject jsonObject1 = temp.asJsonObject();
-            System.out.println("balala"+ jsonObject1.getString("__unitPrice"));
+
+            JsonNumber t = jsonObject1.getJsonNumber("__total");
+
+            String total = String.valueOf(t);
 
             allItems.add(new ItemDetailsDTO(
                     jsonObject1.getString("__itemCode"),
                     jsonObject1.getString("__description"),
                     jsonObject1.getString("__customerQTY"),
                     jsonObject1.getString("__unitPrice"),
-                    jsonObject1.getString("__total")
+                    total
             ));
         }
 
@@ -136,10 +138,9 @@ public class PlaceOrderServlet extends HttpServlet {
             );
 
             if (placeOrderBO.placeOrder(orderDTO,connection)) {
-                System.out.println("one");
                 resp.setStatus(HttpServletResponse.SC_OK);
                 JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                objectBuilder.add("message","Customer Successfully Updated.");
+                objectBuilder.add("message","Order Successfully Added.");
                 objectBuilder.add("status",resp.getStatus());
                 writer.print(objectBuilder.build());
 

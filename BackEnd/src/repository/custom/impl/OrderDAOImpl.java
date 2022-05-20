@@ -2,6 +2,7 @@ package repository.custom.impl;
 
 import entity.Order;
 import javafx.collections.ObservableList;
+import repository.CrudUtil;
 import repository.custom.OrderDAO;
 
 import java.sql.Connection;
@@ -15,7 +16,7 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public boolean add(Order order, Connection connection) throws SQLException, ClassNotFoundException {
-        return false;
+        return CrudUtil.executeUpdate(connection,"INSERT INTO `Order` VALUES(?,?,?,?)",order.getOrderId(),order.getCusId(),order.getOrderDate(),order.getTotal());
     }
 
     @Override
