@@ -260,11 +260,11 @@ $("#postalCode").keyup(function () {
 
 
 function disableCusRegisterBtn(){
-  /*  if (validateAll()){
+    if (validateAll()){
         $("#btnCustomerRegister").attr('disabled', false);
     }else {
         $("#btnCustomerRegister").attr('disabled', true);
-    }*/
+    }
 }
 
 function isCustomerIdExist(){
@@ -279,7 +279,6 @@ function isCustomerIdExist(){
 
 function validateAll(){
 
-    if (isCustomerIdExist()){
         if (validateCustomerName()){
             if (validateCusAddress()){
                 if (validateCustomerCity()){
@@ -298,11 +297,6 @@ function validateAll(){
         }else {
             return false;
         }
-    }else {
-        return false;
-    }
-
-
 }
 
 
