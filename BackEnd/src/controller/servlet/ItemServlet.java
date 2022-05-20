@@ -3,13 +3,12 @@ package controller.servlet;
 import bussiness.BOFactory;
 import bussiness.custom.CustomerBO;
 import bussiness.custom.ItemBO;
+import dto.CustomerDTO;
 import dto.ItemDTO;
+import javafx.collections.ObservableList;
 
 import javax.annotation.Resource;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
+import javax.json.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,35 +30,99 @@ public class ItemServlet extends HttpServlet {
     ItemBO itemBO = (ItemBO) BOFactory.getBOFactory().getBO(BOFactory.BOTypes.ITEM);
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        resp.setContentType("application/json");
+
+        String cId = req.getParameter("cusId");
+        String option = req.getParameter("option");
+        PrintWriter writer = resp.getWriter();
+
+        try {
+            Connection connection = ds.getConnection();
+
+          //  switch (option) {
+
+               /* case "SEARCH":
+                    CustomerDTO customer = customerBO.searchCustomer(cId, connection);
+
+                    JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+
+                    objectBuilder.add("id", customer.getCustomerId());
+                    objectBuilder.add("name", customer.getCustomerName());
+                    objectBuilder.add("address", customer.getCustomerAddress());
+                    objectBuilder.add("city", customer.getCity());
+                    objectBuilder.add("province", customer.getProvince());
+                    objectBuilder.add("postalCode", customer.getPostalCode());
+
+                    writer.print(objectBuilder.build());
+                    break;*/
+
+               // case "GETALL":
+
+                    ObservableList<ItemDTO> allItems = itemBO.getAllItems(connection);
+                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+                    for (ItemDTO itemDTO : allItems) {
+                        JsonObjectBuilder ob = Json.createObjectBuilder();
+
+                        ob.add("id", itemDTO.getItemCode());
+                        ob.add("description", itemDTO.getDescription());
+                        ob.add("packSize", itemDTO.getPackSize());
+                        ob.add("unitPrice", itemDTO.getUnitPrice());
+                        ob.add("qtyOnHand", itemDTO.getQtyOnHand());
+
+                        arrayBuilder.add(ob.build());
+                    }
+
+                    JsonObjectBuilder response = Json.createObjectBuilder();
+                    response.add("status", 200);
+                    response.add("message", "Done");
+                    response.add("data", arrayBuilder.build());
+                    writer.print(response.build());
+
+                 //   break;
+           // }
+
+            connection.close();
+
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+
+        }
+
+    }
+
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         resp.setContentType("application/json");
         PrintWriter writer = resp.getWriter();
 
-        JsonReader reader = Json.createReader(req.getReader());
-        JsonObject jsonObject = reader.readObject();
-
         try {
             Connection connection = ds.getConnection();
 
-            ItemDTO item = new ItemDTO(
-                    jsonObject.getString("itemId"),
-                    jsonObject.getString("description"),
-                    jsonObject.getString("packSize"),
-                    jsonObject.getString("packSize"),
-                    jsonObject.getString("packSize")
+            ItemDTO itemDTO = new ItemDTO(
+                    req.getParameter("itemId"),
+                    req.getParameter("description"),
+                    req.getParameter("packSize"),
+                    req.getParameter("unitPrice"),
+                    req.getParameter("inputQTY")
             );
 
-            if (itemBO.saveItem(item, connection)){
+            if (itemBO.saveItem(itemDTO, connection)){
+
                 resp.setStatus(HttpServletResponse.SC_OK);
                 JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
                 objectBuilder.add("message", "Item Successfully Added.");
                 objectBuilder.add("status", resp.getStatus());
                 writer.print(objectBuilder.build());
+
             }
             connection.close();
 
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
 
             resp.setStatus(HttpServletResponse.SC_OK);
 

@@ -1,4 +1,4 @@
-generateItemIds();
+loadAllItems();
 
 function saveItem(){
     var data = $("#itemForm").serialize();
@@ -26,7 +26,21 @@ function saveItem(){
 }
 
 function loadAllItems(){
-
+    $("#itemTable").empty();
+    $.ajax({
+        url: "http://localhost:8080/backend/item?option=GETALL",
+        method: "GET",
+        success: function (resp) {
+            for (const item of resp.data) {
+                let row = `<tr><td>${item.id}</td><td>${item.description}</td><td>${item.packSize}</td><td>${item.unitPrice}</td><td>${item.qtyOnHand}</td></tr>`;
+                $("#itemTable").append(row);
+                /*bindClickEvents();*/
+            }
+        },
+        error:function (ob,state,error){
+            console.log(ob,state,error)
+        }
+    });
 
 }
 
@@ -45,7 +59,32 @@ function clearItemTextFields(){
 }
 
 function deleteItem(){
+    let itemId = $("#itemCode").val();
+    console.log(cusId);
+    $.ajax({
+        url: "http://localhost:8080/backend/customer?CusID=" + itemId,
+        method: "DELETE",
 
+        success: function (res) {
+            console.log(res);
+            if (res.status == 200) {
+                alert("Customer Successfully Deleted.");
+                loadAllCustomers();
+            } else if (res.status == 400) {
+                alert("Customer Successfully Deleted.");
+                loadAllCustomers();
+            } else {
+                alert("Customer Successfully Deleted.");
+                loadAllCustomers();
+            }
+
+        },
+        error: function (ob, status, t) {
+            console.log(ob);
+            console.log(status);
+            console.log(t);
+        }
+    });
 }
 
 function updateItem(){
