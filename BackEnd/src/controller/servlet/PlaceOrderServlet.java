@@ -23,7 +23,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 
-@WebServlet(urlPatterns = "/placeOrder")
+@WebServlet(urlPatterns = "/order")
 
 public class PlaceOrderServlet extends HttpServlet {
     @Resource(name = "java:comp/env/jdbc/pool")
@@ -107,9 +107,11 @@ public class PlaceOrderServlet extends HttpServlet {
 
         ArrayList<ItemDetailsDTO> allItems = new ArrayList<>();
 
+
         for (JsonValue temp : items) {
 
             JsonObject jsonObject1 = temp.asJsonObject();
+            System.out.println("balala"+ jsonObject1.getString("__unitPrice"));
 
             allItems.add(new ItemDetailsDTO(
                     jsonObject1.getString("__itemCode"),
@@ -122,6 +124,7 @@ public class PlaceOrderServlet extends HttpServlet {
 
         try {
             Connection connection = ds.getConnection();
+
             OrderDTO orderDTO = new OrderDTO(
 
                     jsonObject.getString("orderId"),
@@ -133,6 +136,7 @@ public class PlaceOrderServlet extends HttpServlet {
             );
 
             if (placeOrderBO.placeOrder(orderDTO,connection)) {
+                System.out.println("one");
                 resp.setStatus(HttpServletResponse.SC_OK);
                 JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
                 objectBuilder.add("message","Customer Successfully Updated.");

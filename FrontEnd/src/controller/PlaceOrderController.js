@@ -45,7 +45,7 @@ function placeOrder(){
     }
 
     $.ajax({
-        url:"http://localhost:8080/backend/placeOrder?",
+        url:"http://localhost:8080/backend/order",
         method:"POST",
         contentType:"application/json",
         data: JSON.stringify(order),
@@ -237,7 +237,7 @@ function enableDisablePlaceOrderBtn(){
 
 
 $("#btnPlaceOrder").click(function (){
-
+placeOrder();
 
 });
 
@@ -332,51 +332,51 @@ $("#placeOrderTable").css('overflow-y','hidden');
 /*-----------------------------------------------------------------------------------------------------*/
 
 function ItemDetails(itemCode,description,customerQTY,unitPrice,total){
-    var __itemCode = itemCode;
-    var __description = description;
-    var __customerQTY = customerQTY;
-    var __unitPrice = unitPrice;
-    var __total = total;
+    this.__itemCode = itemCode;
+    this.__description = description;
+    this.__customerQTY = customerQTY;
+    this.__unitPrice = unitPrice;
+    this.__total = total;
 
 
     this.getOrderItemCode = function (){
-        return __itemCode;
+        return this.__itemCode;
     }
 
     this.setItemCode = function (id){
-        __itemCode = id;
+        this.__itemCode = id;
     }
 
     this.getOrderItemDescription = function (){
-        return __description;
+        return this.__description;
     }
 
     this.setOrderItemDescription = function (description){
-        __description = description;
+        this.__description = description;
     }
 
     this.getOrderCustomerQTY = function (){
-        return __customerQTY;
+        return this.__customerQTY;
     }
 
     this.setOrderCustomerQTY = function (qty){
-        __customerQTY = qty;
+        this.__customerQTY = qty;
     }
 
     this.getOrderUnitPrice = function (){
-        return __unitPrice;
+        return this.__unitPrice;
     }
 
     this.setOrderUnitPrice = function (unitPrice){
-        __unitPrice = unitPrice;
+        this.__unitPrice = unitPrice;
     }
 
     this.getItemTotal = function (){
-        return __total;
+        return this.__total;
     }
 
     this.setItemTotal = function (total){
-        __total = total;
+        this.__total = total;
     }
 
 

@@ -22,7 +22,7 @@ public class PlaceOrderBOImpl implements PlaceOrderBO {
     CustomerDAO customerDAO = (CustomerDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.CUSTOMER);
     OrderDAO orderDAO = (OrderDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ORDER);
     ItemDAO itemDAO = (ItemDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ITEM);
-    ItemDetailsDAO itemDetailsDAO = (ItemDetailsDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ITEM);
+    ItemDetailsDAO itemDetailsDAO = (ItemDetailsDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ITEMDETAIL);
 
     @Override
     public CustomerDTO getCustomer(String cId, Connection connection) throws SQLException, ClassNotFoundException {
@@ -37,6 +37,7 @@ public class PlaceOrderBOImpl implements PlaceOrderBO {
 
     @Override
     public boolean placeOrder(OrderDTO orderDTO, Connection con) {
+        System.out.println("This is placeOrder");
         Connection connection = null;
 
         Order order = new Order(orderDTO.getOrderId(),orderDTO.getCusId(),orderDTO.getOrderDate(),Double.parseDouble(orderDTO.getTotal()));
