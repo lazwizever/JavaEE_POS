@@ -81,14 +81,14 @@ function deleteItem(){
         success: function (res) {
             console.log(res);
             if (res.status == 200) {
-                alert("Customer Successfully Deleted.");
-                loadAllCustomers();
+                alert("Item Successfully Deleted.");
+                loadAllItems();
             } else if (res.status == 400) {
-                alert("Customer Successfully Deleted.");
-                loadAllCustomers();
+                alert("Item Successfully Deleted.");
+                loadAllItems();
             } else {
-                alert("Customer Successfully Deleted.");
-                loadAllCustomers();
+                alert("Item Successfully Deleted.");
+                loadAllItems();
             }
 
         },

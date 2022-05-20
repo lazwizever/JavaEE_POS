@@ -64,4 +64,9 @@ public class ItemBOImpl implements ItemBO {
 
         return itemDAO.update(item,connection);
     }
+
+    @Override
+    public boolean deleteItem(String itemId, Connection connection) throws SQLException, ClassNotFoundException {
+        return itemDAO.delete(itemId,connection);
+    }
 }

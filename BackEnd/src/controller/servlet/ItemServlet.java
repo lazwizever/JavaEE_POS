@@ -137,7 +137,45 @@ public class ItemServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doDelete(req, resp);
+        resp.setContentType("application/jason");
+        String itemId = req.getParameter("itemId");
+
+        PrintWriter writer = resp.getWriter();
+
+        try {
+
+            Connection connection = ds.getConnection();
+
+            if (itemBO.deleteItem(itemId,connection)) {
+
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                resp.setStatus(HttpServletResponse.SC_OK);
+                objectBuilder.add("message","Customer Successfully Deleted.");
+                objectBuilder.add("status",resp.getStatus());
+                writer.print(objectBuilder.build());
+
+            }else {
+
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("message","Wrong Id Inserted.");
+                objectBuilder.add("status",400);
+                writer.print(objectBuilder.build());
+
+            }
+            connection.close();
+
+        } catch (SQLException | ClassNotFoundException e) {
+
+            resp.setStatus(HttpServletResponse.SC_OK);
+
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+            objectBuilder.add("data",e.getLocalizedMessage());
+            objectBuilder.add("message","Error");
+            objectBuilder.add("status",resp.getStatus());
+            writer.print(objectBuilder.build());
+
+            e.printStackTrace();
+        }
     }
 
     @Override
