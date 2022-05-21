@@ -112,7 +112,7 @@ public class PlaceOrderBOImpl implements PlaceOrderBO {
 
         for (ItemDetails temp : itemDetails) {
             ItemDetailsDTO itemDetailsDTO = new ItemDetailsDTO(
-                    temp.getItemCode(),temp.getDescription(),String.valueOf(temp.getCustomerQTY()),String.valueOf(temp.getUnitPrice()),String.valueOf(temp.getTotal())
+                    temp.getItemCode(),temp.getOrderId(),temp.getDescription(),String.valueOf(temp.getCustomerQTY()),String.valueOf(temp.getUnitPrice()),String.valueOf(temp.getTotal())
             );
             itemDetailsDTOS.add(itemDetailsDTO);
         }

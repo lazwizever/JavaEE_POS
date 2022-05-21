@@ -1,11 +1,8 @@
 package dto;
 
-import entity.ItemDetails;
-
-import java.sql.Connection;
-
 public class ItemDetailsDTO {
     private String itemCode;
+    private String orderId;
     private String description;
     private String customerQTY;
     private String unitPrice;
@@ -14,8 +11,9 @@ public class ItemDetailsDTO {
     public ItemDetailsDTO() {
     }
 
-    public ItemDetailsDTO(String itemCode, String description, String customerQTY, String unitPrice, String total) {
+    public ItemDetailsDTO(String itemCode, String orderId, String description, String customerQTY, String unitPrice, String total) {
         this.setItemCode(itemCode);
+        this.setOrderId(orderId);
         this.setDescription(description);
         this.setCustomerQTY(customerQTY);
         this.setUnitPrice(unitPrice);
@@ -28,6 +26,14 @@ public class ItemDetailsDTO {
 
     public void setItemCode(String itemCode) {
         this.itemCode = itemCode;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public String getDescription() {

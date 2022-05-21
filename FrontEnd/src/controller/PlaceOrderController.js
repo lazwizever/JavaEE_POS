@@ -372,8 +372,9 @@ $("#placeOrderTable").css('overflow-y','hidden');
 
 /*-----------------------------------------------------------------------------------------------------*/
 
-function ItemDetails(itemCode,description,customerQTY,unitPrice,total) {
+function ItemDetails(itemCode,orderId,description,customerQTY,unitPrice,total) {
     this.__itemCode = itemCode;
+    this.__orderId = orderId;
     this.__description = description;
     this.__customerQTY = customerQTY;
     this.__unitPrice = unitPrice;
@@ -386,6 +387,15 @@ function ItemDetails(itemCode,description,customerQTY,unitPrice,total) {
 
     this.setItemCode = function (id) {
         this.__itemCode = id;
+    }
+
+
+    this.getOrderId = function () {
+        return this.__orderId;
+    }
+
+    this.setOrderId = function (oId) {
+        this.__orderId = oId;
     }
 
     this.getOrderItemDescription = function () {

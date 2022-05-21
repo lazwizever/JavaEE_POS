@@ -118,6 +118,7 @@ public class PlaceOrderServlet extends HttpServlet {
 
             allItems.add(new ItemDetailsDTO(
                     jsonObject1.getString("__itemCode"),
+                    jsonObject1.getString("__orderId"),
                     jsonObject1.getString("__description"),
                     jsonObject1.getString("__customerQTY"),
                     jsonObject1.getString("__unitPrice"),
