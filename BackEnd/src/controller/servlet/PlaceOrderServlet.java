@@ -74,7 +74,7 @@ public class PlaceOrderServlet extends HttpServlet {
                     break;
 
                 case "searchOrder":
-                    OrderDTO orderDTO = placeOrderBO.searchOrder(id, connection);
+                   /* OrderDTO orderDTO = placeOrderBO.searchOrder(id, connection);
                     JsonObjectBuilder objectBuilder2 = Json.createObjectBuilder();
 
                     objectBuilder2.add("orderId", orderDTO.getOrderId());
@@ -83,9 +83,41 @@ public class PlaceOrderServlet extends HttpServlet {
                     objectBuilder2.add("total", orderDTO.getTotal());
 
                     writer.print(objectBuilder2.build());
+                    break;*/
+
+                    OrderDTO order = placeOrderBO.searchOrder(id, connection);
+
+                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+
+                    for (ItemDetailsDTO orderItem : order.getItems()) {
+                        JsonObjectBuilder ob = Json.createObjectBuilder();
+
+                        ob.add("itemCode",orderItem.getItemCode());
+                        ob.add("orderId",orderItem.getOrderId());
+                        ob.add("description",orderItem.getDescription());
+                        ob.add("cusQty",orderItem.getCustomerQTY());
+                        ob.add("unitPrice",orderItem.getUnitPrice());
+                        ob.add("total",orderItem.getTotal());
+                        JsonObject oItem = ob.build();
+
+                        arrayBuilder.add(oItem);
+
+                    }
+
+                    JsonArray orderItems = arrayBuilder.build();
+
+
+                    JsonObjectBuilder objectBuilder2 = Json.createObjectBuilder();
+                    objectBuilder2.add("orderId", order.getOrderId());
+                    objectBuilder2.add("customerId", order.getCusId());
+                    objectBuilder2.add("orderDate", order.getOrderDate());
+                    objectBuilder2.add("total", order.getTotal());
+                    objectBuilder2.add("items",orderItems );
+
+                    writer.print(objectBuilder2.build());
+
                     break;
-
-
             }
 
             connection.close();

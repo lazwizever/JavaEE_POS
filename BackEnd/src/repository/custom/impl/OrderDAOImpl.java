@@ -6,6 +6,7 @@ import repository.CrudUtil;
 import repository.custom.OrderDAO;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OrderDAOImpl implements OrderDAO {
@@ -30,7 +31,12 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public Order search(String s, Connection connection) throws SQLException, ClassNotFoundException {
+    public Order search(String id, Connection connection) throws SQLException, ClassNotFoundException {
+        ResultSet rst = CrudUtil.executeQuery(connection,"SELECT * FROM `Order` WHERE orderId =?", id);
+        if (rst.next()){
+            return new Order(rst.getString(1),rst.getString(2),rst.getString(3),rst.getDouble(4));
+
+        }
         return null;
     }
 

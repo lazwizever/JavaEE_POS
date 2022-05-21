@@ -117,21 +117,22 @@ function searchOrder() {
         method: "GET",
         success: function (resp) {
             $("#oDate").val(resp.orderDate);
-            $("#netAmount").text(resp.netTotal);
-            $("#grossAmount").text(resp.__total);
+            $("#netAmount").val(resp.netTotal);
+            $("#grossAmount").val(resp.total);
             $("#customerId").val(resp.customerId);
             $("#customerId").trigger("change");
 
             let i = 0;
+            console.log(resp.items)
             for (let orderItem of resp.items) {
-                console.log(orderItem.itemId);
+
                 $.ajax({
-                    url: "http://localhost:8080/backend/order?option=getItem&id=" + orderItem.__itemCode,
+                    url: "http://localhost:8080/backend/order?option=getItem&id=" + orderItem.itemCode,
                     method: "GET",
                     success: function (response) {
                         i++;
-                        let total = parseFloat(response.unitPrice) * parseInt(orderItem.__customerQTY);
-                        itemDetailsArray.push(new ItemDetails(orderItem.__itemCode, response.description, response.__customerQTY, orderItem.unitPrice, total))
+                        let total = parseFloat(response.unitPrice) * parseInt(orderItem.cusQty);
+                        itemDetailsArray.push(new ItemDetails(orderItem.itemCode,orderItem.orderId, response.description, orderItem.cusQty, orderItem.unitPrice, total))
 
                         if (resp.items.length == i) {
                             loadTable();
@@ -172,6 +173,7 @@ function setGrossAmount(){
 
 function addToCart(){
     let itemId = $("#itemId").val();
+    let orderId = $("#orderId").val();
     let description = $("#description").val();
     let cusQTY = $("#custQTY").val();
     let unitPrices = $("#unitPrices").val();
@@ -208,7 +210,7 @@ function addToCart(){
         }
 
     }
-    var itemDetails = new ItemDetails(itemId,description,cusQTY,unitPrices,total);
+    var itemDetails = new ItemDetails(itemId,orderId,description,cusQTY,unitPrices,total);
     itemDetailsArray.push(itemDetails);
     clearItemsFieldsPlaceOrder();
     loadTable();
@@ -283,6 +285,7 @@ placeOrder();
 });
 
 $("#btnSearchOrder").click(function (){
+    itemDetailsArray = [];
 searchOrder();
 });
 

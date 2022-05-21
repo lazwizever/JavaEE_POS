@@ -107,7 +107,6 @@ public class PlaceOrderBOImpl implements PlaceOrderBO {
         ArrayList<ItemDetailsDTO> itemDetailsDTOS = new ArrayList<>();
 
         Order order = orderDAO.search(id,connection);
-
         ArrayList<ItemDetails> itemDetails = itemDetailsDAO.getOrderItems(order.getOrderId(),connection);
 
         for (ItemDetails temp : itemDetails) {
