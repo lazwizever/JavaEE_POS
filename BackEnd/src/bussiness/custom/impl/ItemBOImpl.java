@@ -45,7 +45,7 @@ public class ItemBOImpl implements ItemBO {
     }
 
     @Override
-    public ItemDTO searchCustomer(String itemId, Connection connection) throws SQLException, ClassNotFoundException {
+    public ItemDTO searchItem(String itemId, Connection connection) throws SQLException, ClassNotFoundException {
         Item item = itemDAO.search(itemId,connection);
 
         ItemDTO itemDTO = new ItemDTO(
@@ -69,4 +69,6 @@ public class ItemBOImpl implements ItemBO {
     public boolean deleteItem(String itemId, Connection connection) throws SQLException, ClassNotFoundException {
         return itemDAO.delete(itemId,connection);
     }
+
+
 }

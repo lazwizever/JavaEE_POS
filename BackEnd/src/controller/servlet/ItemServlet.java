@@ -44,7 +44,7 @@ public class ItemServlet extends HttpServlet {
             switch (option) {
 
                 case "SEARCH":
-                    ItemDTO itemDTO1 = itemBO.searchCustomer(itemId, connection);
+                    ItemDTO itemDTO1 = itemBO.searchItem(itemId, connection);
 
                     JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 

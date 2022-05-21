@@ -4,6 +4,7 @@ import bussiness.BOFactory;
 import bussiness.custom.CustomerBO;
 import bussiness.custom.PlaceOrderBO;
 import dto.CustomerDTO;
+import dto.ItemDTO;
 import dto.ItemDetailsDTO;
 import dto.OrderDTO;
 import javafx.collections.ObservableList;
@@ -35,7 +36,7 @@ public class PlaceOrderServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
 
-        String cId = req.getParameter("cusId");
+        String id = req.getParameter("id");
         String option = req.getParameter("option");
         PrintWriter writer = resp.getWriter();
 
@@ -44,8 +45,8 @@ public class PlaceOrderServlet extends HttpServlet {
 
             switch (option) {
 
-                case "GetCustomer":
-                    CustomerDTO customer = placeOrderBO.getCustomer(cId, connection);
+                case "getCustomer":
+                    CustomerDTO customer = placeOrderBO.getCustomer(id, connection);
 
                     JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
@@ -59,31 +60,31 @@ public class PlaceOrderServlet extends HttpServlet {
                     writer.print(objectBuilder.build());
                     break;
 
-               /* case "GETALL":
+                case "getItem":
+                    ItemDTO itemDTO1 = placeOrderBO.searchItem(id, connection);
 
-                    ObservableList<CustomerDTO> allCustomers = customerBO.getAllCustomers(connection);
-                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                    JsonObjectBuilder objectBuilder1 = Json.createObjectBuilder();
 
-                    for (CustomerDTO c : allCustomers) {
-                        JsonObjectBuilder ob = Json.createObjectBuilder();
+                    objectBuilder1.add("id", itemDTO1.getItemCode());
+                    objectBuilder1.add("description", itemDTO1.getDescription());
+                    objectBuilder1.add("packSize", itemDTO1.getPackSize());
+                    objectBuilder1.add("unitPrice", itemDTO1.getUnitPrice());
+                    objectBuilder1.add("qtyOnHand", itemDTO1.getQtyOnHand());
+                    writer.print(objectBuilder1.build());
+                    break;
 
-                        ob.add("id", c.getCustomerId());
-                        ob.add("name", c.getCustomerName());
-                        ob.add("address", c.getCustomerAddress());
-                        ob.add("city", c.getCity());
-                        ob.add("province", c.getProvince());
-                        ob.add("postalCode", c.getPostalCode());
+                case "searchOrder":
+                    OrderDTO orderDTO = placeOrderBO.searchOrder(id, connection);
+                    JsonObjectBuilder objectBuilder2 = Json.createObjectBuilder();
 
-                        arrayBuilder.add(ob.build());
-                    }
+                    objectBuilder2.add("orderId", orderDTO.getOrderId());
+                    objectBuilder2.add("customerId", orderDTO.getCusId());
+                    objectBuilder2.add("orderDate", orderDTO.getOrderDate());
+                    objectBuilder2.add("total", orderDTO.getTotal());
 
-                    JsonObjectBuilder response = Json.createObjectBuilder();
-                    response.add("status", 200);
-                    response.add("message", "Done");
-                    response.add("data", arrayBuilder.build());
-                    writer.print(response.build());
+                    writer.print(objectBuilder2.build());
+                    break;
 
-                    break;*/
 
             }
 

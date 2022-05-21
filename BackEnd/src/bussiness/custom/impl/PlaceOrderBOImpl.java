@@ -2,9 +2,11 @@ package bussiness.custom.impl;
 
 import bussiness.custom.PlaceOrderBO;
 import dto.CustomerDTO;
+import dto.ItemDTO;
 import dto.ItemDetailsDTO;
 import dto.OrderDTO;
 import entity.Customer;
+import entity.Item;
 import entity.ItemDetails;
 import entity.Order;
 import repository.DAOFactory;
@@ -86,6 +88,40 @@ public class PlaceOrderBOImpl implements PlaceOrderBO {
             }
         }
         return false;
+    }
+
+    @Override
+    public ItemDTO searchItem(String id, Connection connection) throws SQLException, ClassNotFoundException {
+        Item item = itemDAO.search(id,connection);
+
+        ItemDTO itemDTO = new ItemDTO(
+                item.getItemCode(),item.getDescription(),String.valueOf(item.getPackSize()),String.valueOf(item.getUnitPrice()),
+                String.valueOf(item.getQtyOnHand())
+        );
+        return itemDTO;
+    }
+
+    @Override
+    public OrderDTO searchOrder(String id, Connection connection) throws SQLException, ClassNotFoundException {
+
+        ArrayList<ItemDetailsDTO> itemDetailsDTOS = new ArrayList<>();
+
+        Order order = orderDAO.search(id,connection);
+
+        ArrayList<ItemDetails> itemDetails = itemDetailsDAO.getOrderItems(order.getOrderId(),connection);
+
+        for (ItemDetails temp : itemDetails) {
+            ItemDetailsDTO itemDetailsDTO = new ItemDetailsDTO(
+                    temp.getItemCode(),temp.getDescription(),String.valueOf(temp.getCustomerQTY()),String.valueOf(temp.getUnitPrice()),String.valueOf(temp.getTotal())
+            );
+            itemDetailsDTOS.add(itemDetailsDTO);
+        }
+
+        OrderDTO orderDTO = new OrderDTO(
+                order.getOrderId(),order.getCusId(),order.getOrderDate(),String.valueOf(order.getTotal()),itemDetailsDTOS
+
+        );
+        return orderDTO;
     }
 
 

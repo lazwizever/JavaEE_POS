@@ -15,7 +15,8 @@ function loadAllCustomerIds(){
     $("#customerId").empty();
 
     for (const customer of customerArray) {
-        $("#customerId").append(new Option(customer.id));
+        let option = `<option value="${customer.id}">${customer.id}</option>`;
+        $("#customerId").append(option);
     }
 }
 
@@ -73,7 +74,7 @@ $("#customerId").on("change",function(){
         let cusId = $(this).find('option:selected').text();
 
         $.ajax({
-            url: "http://localhost:8080/backend/customer?option=SEARCH&cusId=" + cusId,
+            url: "http://localhost:8080/backend/order?option=getCustomer&id=" + cusId,
             method: "GET",
             success: function (response) {
 
@@ -92,7 +93,7 @@ $("#cmbItemIds").on("change",function(){
     let itemId = $(this).find('option:selected').text();
 
     $.ajax({
-        url: "http://localhost:8080/backend/item?option=SEARCH&itemCode=" + itemId,
+        url: "http://localhost:8080/backend/order?option=getItem&id=" + itemId,
         method: "GET",
         success: function (response) {
             $("#itemId").val(itemId);
@@ -107,6 +108,46 @@ $("#cmbItemIds").on("change",function(){
         }
     });
 });
+
+function searchOrder() {
+    let id = $("#txtSearchOrder").val();
+
+    $.ajax({
+        url: "http://localhost:8080/backend/order?option=searchOrder&id=" + id,
+        method: "GET",
+        success: function (resp) {
+            $("#oDate").val(resp.orderDate);
+            $("#netAmount").text(resp.netTotal);
+            $("#grossAmount").text(resp.__total);
+            $("#customerId").val(resp.customerId);
+            $("#customerId").trigger("change");
+
+            let i = 0;
+            for (let orderItem of resp.items) {
+                console.log(orderItem.itemId);
+                $.ajax({
+                    url: "http://localhost:8080/backend/order?option=getItem&id=" + orderItem.__itemCode,
+                    method: "GET",
+                    success: function (response) {
+                        i++;
+                        let total = parseFloat(response.unitPrice) * parseInt(orderItem.__customerQTY);
+                        itemDetailsArray.push(new ItemDetails(orderItem.__itemCode, response.description, response.__customerQTY, orderItem.unitPrice, total))
+
+                        if (resp.items.length == i) {
+                            loadTable();
+                        }
+                    },
+                    error: function (ob, statusText, error) {
+                    }
+                });
+
+            }
+        },
+        error: function (ob, statusText, error) {
+            alert("There is no Order with this Id");
+        }
+    });
+}
 
 
 function clearItemsFieldsPlaceOrder(){
@@ -242,7 +283,7 @@ placeOrder();
 });
 
 $("#btnSearchOrder").click(function (){
-
+searchOrder();
 });
 
 
@@ -331,7 +372,7 @@ $("#placeOrderTable").css('overflow-y','hidden');
 
 /*-----------------------------------------------------------------------------------------------------*/
 
-function ItemDetails(itemCode,description,customerQTY,unitPrice,total){
+function ItemDetails(itemCode,description,customerQTY,unitPrice,total) {
     this.__itemCode = itemCode;
     this.__description = description;
     this.__customerQTY = customerQTY;
@@ -339,49 +380,48 @@ function ItemDetails(itemCode,description,customerQTY,unitPrice,total){
     this.__total = total;
 
 
-    this.getOrderItemCode = function (){
+    this.getOrderItemCode = function () {
         return this.__itemCode;
     }
 
-    this.setItemCode = function (id){
+    this.setItemCode = function (id) {
         this.__itemCode = id;
     }
 
-    this.getOrderItemDescription = function (){
+    this.getOrderItemDescription = function () {
         return this.__description;
     }
 
-    this.setOrderItemDescription = function (description){
+    this.setOrderItemDescription = function (description) {
         this.__description = description;
     }
 
-    this.getOrderCustomerQTY = function (){
+    this.getOrderCustomerQTY = function () {
         return this.__customerQTY;
     }
 
-    this.setOrderCustomerQTY = function (qty){
+    this.setOrderCustomerQTY = function (qty) {
         this.__customerQTY = qty;
     }
 
-    this.getOrderUnitPrice = function (){
+    this.getOrderUnitPrice = function () {
         return this.__unitPrice;
     }
 
-    this.setOrderUnitPrice = function (unitPrice){
+    this.setOrderUnitPrice = function (unitPrice) {
         this.__unitPrice = unitPrice;
     }
 
-    this.getItemTotal = function (){
+    this.getItemTotal = function () {
         return this.__total;
     }
 
-    this.setItemTotal = function (total){
+    this.setItemTotal = function (total) {
         this.__total = total;
     }
 
-
-
 }
+
 
 
 
